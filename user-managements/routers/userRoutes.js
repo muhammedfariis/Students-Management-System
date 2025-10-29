@@ -7,12 +7,12 @@ import {
   remove
 } from '../controllers/userLogics.js'
 
-import auth from "../middlewares/usermiddle.js"
-import roles from "../middlewares/roles.js"
+import auth from "../../authentications/middlewares/authmiddle.js"
+import roles from "../../authentications/middlewares/userRoles.js"
 
 const routers = express.Router()
 
-routers.get("/users" , auth ,roles("admin" , "directors"), getUsers)
+routers.get("/users" , auth ,roles("admin" , "director"), getUsers)
 
 routers.get("/users/:id" ,auth , roles("admin") , getUsersById)
 

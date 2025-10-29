@@ -1,24 +1,30 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-const auth = async (req , res , next)=>{
+const auth = (req, res, next) => {
 
-   const headerSetup = req.headers.authorization
-   if(!headerSetup){
-    return res.status(401).json({messege : "authorization failed"})
-   }
+  const headers = req.headers.authorization;
 
-   const token = headerSetup.split(" ")[1]
-   if(!token){
-    return res.status(401).json({messege : "invalid tokens"})
-   }
-   try{
-   const verifiying = jwt.verify(token,process.env.JWT_SECRET)
-   req.user = verifiying.user 
-    next()
-  }catch(err){
-    return res.status(500).json({messege : "internal server error" , err})
- }
+  if (!headers) {
+    return res.status(401).json({ message: "Unauthorized - No Token Provided" });
+  }
 
-}
+  const token = headers.split(" ")[1];
 
-export default auth
+  if (!token) {
+    return res.status(400).json({ message: "Token not available" });
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = payload.user;
+    req.userRole = payload.role;  // ✅ here role comes from token
+    console.log("Middleware Role:", req.userRole);
+
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid Token", err });
+  }
+};
+
+export default auth;

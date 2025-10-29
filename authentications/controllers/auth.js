@@ -13,10 +13,11 @@ export const register = async (req , res)=>{
 	 phone,
 	 age,
 	 email,
-	 password	
+	 password,
+	 role	
 	} = req.body
 
-	if(!username || !phone || !age || !email || !password){
+	if(!username || !phone || !age || !email || !password || !role){
 	return res.status(400).json({messege : "input fields must be filled!"})
 	}
 
@@ -37,7 +38,8 @@ export const register = async (req , res)=>{
 	 phone,
 	 age,
 	 email,
-	 password : hashed
+	 password : hashed,
+	 role
 
 	})
 
@@ -48,9 +50,9 @@ export const register = async (req , res)=>{
 
 
 	const tokens = JWT.sign(
-     {user  : signup._id},
+     {user  : signup._id , role : signup.role.toLowerCase()},
 	  process.env.JWT_SECRET,
-	  {expiresIn : "12hr"}
+	  {expiresIn : "12h"}
 	)
 
    return res.status(201).json({ 
@@ -61,7 +63,8 @@ export const register = async (req , res)=>{
 		phone : signup.phone,
 		age : signup.age,
 		email : signup.email,
-		password : signup.password
+		password : signup.password,
+		role : signup.role
 	 }
  
    })
@@ -78,8 +81,8 @@ export const register = async (req , res)=>{
 export const login = async (req , res)=>{
 
   try{
-    const {email , password} = req.body
-  if(!email || !password){
+    const {email , password , role} = req.body
+  if(!email || !password || !role){
      return res.status(400).json({messege : "email and password must include"})
    }
  
@@ -96,9 +99,9 @@ export const login = async (req , res)=>{
   }
 
   const tokens = JWT.sign(
-	{user : finding._id},
+	{user : finding._id , role : finding.role.toLowerCase()},
 	process.env.JWT_SECRET,
-	{expiresIn : "12hr"}
+	{expiresIn : "12h"}
 
   )
 
@@ -107,6 +110,7 @@ export const login = async (req , res)=>{
    user:{
     userId : finding._id,
 	email : finding.email,
+	role : finding.role
 
    }
 

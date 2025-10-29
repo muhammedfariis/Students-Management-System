@@ -32,6 +32,10 @@ const registerSchema = new mongoose.Schema({
    required : true,
    min : 8,
    max : 15
+  },
+  role :{
+    type : String,
+    required : true
   }
 
 },{timestamps : true})
