@@ -1,7 +1,7 @@
+
 import jwt from "jsonwebtoken";
 
 const auth = (req, res, next) => {
-
   const headers = req.headers.authorization;
 
   if (!headers) {
@@ -17,9 +17,11 @@ const auth = (req, res, next) => {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = payload.user;
-    req.userRole = payload.role;  // ✅ here role comes from token
-    console.log("Middleware Role:", req.userRole);
+    req.user = payload.userId;
+    req.userRole = payload.role;
+
+    console.log("Auth User:", req.user);
+    console.log("Role:", req.userRole);
 
     next();
   } catch (err) {
@@ -28,3 +30,4 @@ const auth = (req, res, next) => {
 };
 
 export default auth;
+
