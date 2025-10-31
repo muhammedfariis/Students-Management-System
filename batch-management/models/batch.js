@@ -20,7 +20,13 @@ const batchSchema = new mongoose.Schema({
   capacity : {
     type : Number,
     required : true
-  }
+  },
+      students:[
+  {
+  type : mongoose.Schema.Types.ObjectId,
+  ref : 'students'
+    }
+      ]
 
 } , {timestamps : true})
 

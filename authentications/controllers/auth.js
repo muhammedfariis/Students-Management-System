@@ -52,7 +52,7 @@ export const register = async (req , res)=>{
 	const tokens = JWT.sign(
      {user  : signup._id , role : signup.role.toLowerCase()},
 	  process.env.JWT_SECRET,
-	  {expiresIn : "12h"}
+	  {expiresIn : "50d"}
 	)
 
    return res.status(201).json({ 
