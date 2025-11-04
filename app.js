@@ -7,6 +7,8 @@ import userRouters from "./user-managements/routers/userRoutes.js"
 import batchRouters from "./batch-management/routers/batchroute.js"
 import studentRouters from "./students-management/routers/studentRoutes.js"
 import stdinbatch from "./students-in-batches/routers/batchRoute.js"
+import Attendence from "./attendence-marker/routers/att_routers.js"
+import Feeses from "./fees-management/routers/fee_router.js"
 import database from "./config/database.js"
 const app = express()
 dotenv.config()
@@ -19,12 +21,15 @@ app.use("/api/officials" , userRouters)
 app.use("/api/batchdetails" , batchRouters )
 app.use("/api/studentdetails" , studentRouters)
 app.use("/api/batchassume" , stdinbatch)
-// starting server
+app.use("/api/attendencemark" , Attendence)
+app.use("/api/invoices" , Feeses)
+// starting server 
 database()
 app.listen(PORT,()=>{
 console.log("⏱ Server..! Running..!");
 spinner.start() 
 })
+
 
 
 
