@@ -9,6 +9,7 @@ import studentRouters from "./students-management/routers/studentRoutes.js"
 import stdinbatch from "./students-in-batches/routers/batchRoute.js"
 import Attendence from "./attendence-marker/routers/att_routers.js"
 import Feeses from "./fees-management/routers/fee_router.js"
+import reportses from "./reports/routers/reportes.js"
 import database from "./config/database.js"
 const app = express()
 dotenv.config()
@@ -23,6 +24,7 @@ app.use("/api/studentdetails" , studentRouters)
 app.use("/api/batchassume" , stdinbatch)
 app.use("/api/attendencemark" , Attendence)
 app.use("/api/invoices" , Feeses)
+app.use("/api/reports" , reportses)
 // starting server 
 database()
 app.listen(PORT,()=>{
