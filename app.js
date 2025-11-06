@@ -10,6 +10,7 @@ import stdinbatch from "./students-in-batches/routers/batchRoute.js"
 import Attendence from "./attendence-marker/routers/att_routers.js"
 import Feeses from "./fees-management/routers/fee_router.js"
 import reportses from "./reports/routers/reportes.js"
+import cron from "./auto/croning.js"
 import database from "./config/database.js"
 const app = express()
 dotenv.config()
