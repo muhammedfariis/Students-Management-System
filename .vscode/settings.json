@@ -1,3 +1,8 @@
+
 {
-    "postman.settings.dotenv-detection-notification-visibility": false
+ "tailwindCSS.lint.cssConflict": "warning",
+ "tailwindCSS.lint.invalidApply": "warning",
+ "tailwindCSS.lint.invalidConfigPath": "warning",
+ "tailwindCSS.validate": false
+
 }
