@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import HorizontalModuleSection from "../components/ui/horizontalModule";
 import ParallaxElement from "../components/ui/parallaxElament";
 import { SpotlightNavbar } from "../components/common/navbar";
+import Footer from "../components/common/landingFooter";
 import LogoSlider from "../components/ui/logoslider";
 import {
   Users,
@@ -347,14 +348,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <footer className="py-16 md:py-24 border-t border-black/5 dark:border-white/5 text-center px-6">
-        <div className="text-2xl md:text-3xl font-black italic mb-6 md:mb-8">
-          ATTENDEX
-        </div>
-        <p className="text-gray-400 dark:text-zinc-700 text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase font-black italic">
-          Institutional Infrastructure © 2026
-        </p>
-      </footer>
+       <Footer/>
 
       <style>{`
         @keyframes spin-slow {

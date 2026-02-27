@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
+import Footer from "../components/common/landingFooter";
 import {
   ShieldCheck,
   FileText,
   Lock,
   Users,
-  Terminal,
   Scale,
   AlertCircle,
   CheckCircle2,
@@ -14,8 +15,6 @@ import {
   Globe,
   Cpu,
   AlertTriangle,
-  BookOpen,
-  HardDrive,
   Ban,
 } from "lucide-react";
 
@@ -23,6 +22,9 @@ import { SpotlightNavbar } from "../components/common/navbar";
 import ParallaxElement from "../components/ui/parallaxElament";
 
 const Terms = () => {
+  // Sync with your Redux store
+  const { mode } = useSelector((state) => state.theme);
+
   const sections = [
     {
       title: "1. System Authorization",
@@ -86,131 +88,122 @@ const Terms = () => {
     },
   ];
 
-  // Custom Cubic Bezier for the buttons
-  const snapTransition = {
-    type: "spring",
-    stiffness: 400,
-    damping: 25,
-    mass: 1,
-  };
-
   return (
-    <div className="bg-black text-white selection:bg-cyan-500 selection:text-black font-sans min-h-screen overflow-hidden">
-      <SpotlightNavbar />
+    <div className={`${mode === "dark" ? "dark" : ""}`}>
+      <div className="bg-white dark:bg-black text-black dark:text-white selection:bg-cyan-500 selection:text-black font-sans min-h-screen overflow-x-hidden transition-colors duration-500">
+        <SpotlightNavbar />
 
-      {/* --- PARALLAX BACKGROUND DECORATION (OLD STYLE) --- */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <ParallaxElement speed={-3} className="absolute top-[10%] -left-20">
-          <div className="text-[20vw] font-black text-white/5 uppercase italic">
-            LEGALS
-          </div>
-        </ParallaxElement>
-        <ParallaxElement speed={2} className="absolute bottom-[10%] -right-20">
-          <div className="text-[20vw] font-black text-cyan-500/5 uppercase italic">
-            TRUST
-          </div>
-        </ParallaxElement>
-      </div>
-
-      {/* --- HERO SECTION --- */}
-      <section className="relative h-[60vh] flex flex-col items-center justify-center pt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center z-10"
-        >
-          <ShieldCheck
-            size={80}
-            className="mx-auto text-cyan-500 mb-6 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]"
-          />
-          <h1 className="text-7xl md:text-9xl font-black italic uppercase tracking-tighter">
-            Terms of <span className="text-cyan-500">Service.</span>
-          </h1>
-          <p className="text-zinc-500 tracking-[0.5em] uppercase text-xs mt-6">
-            Last Updated: February 2026
-          </p>
-        </motion.div>
-      </section>
-
-      {/* --- MAIN CONTENT (OLD UI CARD STYLE) --- */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 pb-40">
-        <div className="space-y-12">
-          {sections.map((section, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="group p-1 bg-gradient-to-br from-white/10 to-transparent rounded-[3rem]"
-            >
-              <div className="bg-zinc-950 p-10 md:p-16 rounded-[2.9rem] flex flex-col md:flex-row gap-8 items-start hover:bg-zinc-900 transition-colors duration-500">
-                <div className="p-5 bg-white/5 rounded-2xl group-hover:scale-110 transition-transform duration-500">
-                  {React.cloneElement(section.icon, { size: 40 })}
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black italic uppercase mb-6 tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                    {section.title}
-                  </h3>
-                  <p className="text-zinc-400 text-xl leading-relaxed font-light italic">
-                    {section.content}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* --- PARALLAX BACKGROUND DECORATION --- */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <ParallaxElement speed={-3} className="absolute top-[10%] -left-10 md:-left-20">
+            <div className="text-[25vw] md:text-[20vw] font-black text-black/[0.03] dark:text-white/5 uppercase italic whitespace-nowrap">
+              LEGALS
+            </div>
+          </ParallaxElement>
+          <ParallaxElement speed={2} className="absolute bottom-[10%] -right-10 md:-right-20">
+            <div className="text-[25vw] md:text-[20vw] font-black text-cyan-500/[0.03] dark:text-cyan-500/5 uppercase italic whitespace-nowrap">
+              TRUST
+            </div>
+          </ParallaxElement>
         </div>
 
-        {/* --- ACCEPTANCE FOOTER WITH CUBIC BEZIER BUTTONS --- */}
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          className="mt-32 p-16 rounded-[4rem] border border-white/5 bg-gradient-to-b from-cyan-500/10 to-transparent text-center"
-        >
-          <AlertCircle size={40} className="mx-auto text-cyan-500 mb-6" />
-          <h2 className="text-4xl font-black italic uppercase mb-6">
-            User Acknowledgement
-          </h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto mb-10 text-lg">
-            By clicking "Accept and Continue" or using the Attendex
-            infrastructure, you signify your full agreement to the system logic
-            and data processing terms outlined above.
-          </p>
+        {/* --- HERO SECTION --- */}
+        <section className="relative h-[50vh] md:h-[60vh] flex flex-col items-center justify-center pt-20 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center z-10"
+          >
+            <ShieldCheck
+              size={60}
+              className="md:w-20 md:h-20 mx-auto text-cyan-500 mb-6 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]"
+            />
+            <h1 className="text-5xl md:text-9xl font-black italic uppercase tracking-tighter leading-tight">
+              Terms of <br className="md:hidden" /> <span className="text-cyan-500">Service.</span>
+            </h1>
+            <p className="text-zinc-500 dark:text-zinc-500 tracking-[0.3em] md:tracking-[0.5em] uppercase text-[10px] md:text-xs mt-6">
+              Last Updated: February 2026
+            </p>
+          </motion.div>
+        </section>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: "#06b6d4", // Cyan-500
-                color: "#ffffff",
-                boxShadow: "0px 0px 30px rgba(6, 182, 212, 0.4)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ cubicBezier: [0.19, 1, 0.22, 1], duration: 0.6 }}
-              className="px-12 py-6 bg-white text-black font-black italic rounded-full uppercase tracking-tighter text-lg"
-            >
-              Accept & Continue
-            </motion.button>
-
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                borderColor: "rgba(255,255,255,0.5)",
-                backgroundColor: "rgba(255,255,255,0.05)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ cubicBezier: [0.19, 1, 0.22, 1], duration: 0.6 }}
-              className="px-12 py-6 bg-transparent text-white border border-white/10 font-black italic rounded-full uppercase tracking-tighter text-lg"
-            >
-              Download PDF
-            </motion.button>
+        {/* --- MAIN CONTENT --- */}
+        <section className="relative z-10 max-w-5xl mx-auto px-6 pb-24 md:pb-40">
+          <div className="space-y-8 md:space-y-12">
+            {sections.map((section, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                className="group p-[1px] bg-black/10 dark:bg-white/10 rounded-[2rem] md:rounded-[3rem] transition-all hover:bg-cyan-500/50"
+              >
+                <div className="bg-gray-50 dark:bg-zinc-950 p-8 md:p-16 rounded-[1.9rem] md:rounded-[2.9rem] flex flex-col md:flex-row gap-6 md:gap-10 items-start hover:bg-white dark:hover:bg-zinc-900 transition-all duration-500 shadow-sm dark:shadow-none">
+                  <div className="p-4 md:p-5 bg-black/5 dark:bg-white/5 rounded-2xl group-hover:scale-110 transition-transform duration-500 shrink-0">
+                    {React.cloneElement(section.icon, { size: 32, className: "md:w-10 md:h-10" })}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-black italic uppercase mb-4 md:mb-6 tracking-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                      {section.title}
+                    </h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-xl leading-relaxed font-light italic">
+                      {section.content}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
-      </section>
 
-      {/* --- FOOTER --- */}
-      <footer className="py-20 border-t border-white/5 text-center text-zinc-800 font-black text-sm tracking-[1em] uppercase italic">
-        Attendex Security Protocol © 2026
-      </footer>
+          {/* --- ACCEPTANCE FOOTER --- */}
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-20 md:mt-32 p-8 md:p-16 rounded-[2.5rem] md:rounded-[4rem] border border-black/5 dark:border-white/5 bg-gray-50 dark:bg-gradient-to-b dark:from-cyan-500/10 dark:to-transparent text-center"
+          >
+            <AlertCircle size={40} className="mx-auto text-cyan-500 mb-6" />
+            <h2 className="text-3xl md:text-4xl font-black italic uppercase mb-6">
+              User Acknowledgement
+            </h2>
+            <p className="text-zinc-500 dark:text-zinc-500 max-w-2xl mx-auto mb-10 text-base md:text-lg">
+              By clicking "Accept and Continue" or using the Attendex
+              infrastructure, you signify your full agreement to the system logic
+              and data processing terms outlined above.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: "#06b6d4",
+                  color: "#ffffff",
+                  boxShadow: "0px 0px 30px rgba(6, 182, 212, 0.4)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 bg-black dark:bg-white text-white dark:text-black font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all"
+              >
+                Accept & Continue
+              </motion.button>
+
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: "rgba(0,0,0,0.05)",
+                  borderColor: "rgba(0,0,0,0.3)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 bg-transparent text-black dark:text-white border border-black/10 dark:border-white/10 font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all"
+              >
+                Download PDF
+              </motion.button>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* --- FOOTER --- */}
+       <Footer/>
+      </div>
     </div>
   );
 };
