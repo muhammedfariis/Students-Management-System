@@ -13,13 +13,11 @@ import {
 } from "lucide-react";
 
 const Footer = () => {
-  // Safe Redux Access with fallback
   const mode = useSelector((state) => state.theme?.mode || 'dark');
   const containerRef = useRef(null);
   
   const currentYear = new Date().getFullYear();
 
-  // 3D Scroll Logic
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end end"],
@@ -74,15 +72,12 @@ const Footer = () => {
         }}
         className="max-w-7xl mx-auto px-6"
       >
-        {/* MAIN CONTAINER */}
         <div className="relative bg-gray-50 dark:bg-zinc-950 border glass-border rounded-[2rem] p-8 md:p-12 overflow-hidden shadow-xl">
           
-          {/* Subtle Background Glow */}
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
             
-            {/* 1. BRAND SECTION */}
             <div className="lg:col-span-4 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-black dark:bg-white flex items-center justify-center rounded-lg shadow-lg">
@@ -118,7 +113,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* 2. NAVIGATION LINKS (Using Link from react-router-dom) */}
             <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
               {footerLinks.map((group, idx) => (
                 <div key={idx} className="space-y-5">
@@ -143,7 +137,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* 3. CENTERED CONTACT CARD WITH GRADIENT */}
           <div className="mt-16 pt-10 pb-8 border glass-border flex flex-col items-center justify-center text-center rounded-[2rem] space-y-8 
             bg-gradient-to-b from-gray-100/50 to-white 
             dark:from-zinc-900/50 dark:to-black 
@@ -183,7 +176,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* 4. BOTTOM BAR */}
         <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-6 px-2">
            <div className="flex items-center gap-2 text-zinc-400 dark:text-zinc-600">
              <ShieldCheck size={14} className="text-cyan-500/50" />

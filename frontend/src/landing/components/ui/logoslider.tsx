@@ -5,7 +5,7 @@ import { cn } from "../../../lib/utils/utils";
 
 export const LogoSlider = ({
   logos = [],
-  speed = 60,
+  speed = 10,
   direction = "left",
   showBlur = true,
   blurLayers = 8,
@@ -41,7 +41,7 @@ export const LogoSlider = ({
           </div>
         )}
 
-        <ul className="logo-slider__track flex items-center h-full w-fit m-0 p-0 list-none">
+        <ul className="logo-slider__track flex items-center justify-center h-full w-full m-0 p-0 list-none">
           {logos?.map((logo, index) => (
             <li
               key={index}

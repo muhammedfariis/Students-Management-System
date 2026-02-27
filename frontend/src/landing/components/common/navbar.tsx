@@ -5,6 +5,7 @@ import { animate } from "framer-motion";
 import { cn } from "../../../lib/utils/utils";
 import { Link } from "react-router-dom";
 import Switch from "../ui/toggle";
+import MeshBackground from "./mesh";
 export interface NavItem {
   label: string;
   href: string;
@@ -20,10 +21,10 @@ export interface SpotlightNavbarProps {
 export function SpotlightNavbar({
   items = [
     { label: "Home", href: "/" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
     { label: "Terms", href: "/terms" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Pricing", href: "/pricing" },
   ],
   className,
   onItemClick,
