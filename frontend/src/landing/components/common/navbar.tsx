@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { animate } from "framer-motion";
 import { cn } from "../../../lib/utils/utils";
 import { Link } from "react-router-dom";
+import Switch from "../ui/toggle";
 export interface NavItem {
   label: string;
   href: string;
@@ -105,78 +106,50 @@ export function SpotlightNavbar({
   };
 
   return (
-    <div className={cn("relative flex justify-center pt-10", className)}>
-      <nav
-        ref={navRef}
-        className={cn(
-          "spotlight-nav spotlight-nav-bg glass-border spotlight-nav-shadow",
-          "relative h-11 rounded-full transition-all duration-300 overflow-hidden",
-        )}
-      >
-        {/* Content */}
-        <ul className="relative flex items-center h-full px-2 gap-0 z-[10]">
-          {items.map((item, idx) => (
-            <li
-              key={idx}
-              className="relative h-full flex items-center justify-center"
-            >
-              <Link
-                to={item.href}
-                data-index={idx}
-                onClick={() => handleItemClick(item, idx)}
-                className={cn(
-                  "px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-white/30",
-                  activeIndex === idx
-                    ? "text-black dark:text-cyan-500"
-                    : "text-neutral-500 dark:text-neutral-900 hover:text-black dark:hover:text-cyan-500",
-                )}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 w-full h-full z-[1] opacity-0 transition-opacity duration-300"
-          style={{
-            opacity: hoverX !== null ? 1 : 0,
-            background: `
-            radial-gradient(
-              120px circle at var(--spotlight-x) 100%, 
-              var(--spotlight-color, rgba(0,0,0,0.1)) 0%, 
-              transparent 50%
-            )
-          `,
-          }}
-        />
+    <div className={cn("relative w-full px-6 pt-10", className)}>
+      {/* MAIN FLEX */}
+      <div className="flex items-center justify-between">
+        {/* LEFT LOGO */}
+        <div className="h-10 w-20 flex justify-center items-center">
+          <img className="h-fit w-fit" src="/images/attendence.png" alt="Attendex" />
+        </div>
 
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 w-full h-[2px] z-[2]"
-          style={{
-            background: `
-                radial-gradient(
-                  60px circle at var(--ambience-x) 0%, 
-                  var(--ambience-color, rgba(0,0,0,1)) 0%, 
-                  transparent 100%
-                )
-              `,
-          }}
-        />
-      </nav>
+        {/* CENTER NAVBAR */}
 
-      <style>{`
-      nav {
-        /* Light Mode Colors: Dark Gray/Black lights */
-        --spotlight-color: rgba(0,0,0,0.08);
-        --ambience-color: rgba(0,0,0,0.8);
-      }
-      :global(.dark) nav {
-        /* Dark Mode Colors: White lights */
-        --spotlight-color: rgba(255,255,255,0.15);
-        --ambience-color: rgba(255,255,255,1);
-      }
-    `}</style>
+        <nav
+          ref={navRef}
+          className={cn(
+            "spotlight-nav spotlight-nav-bg glass-border spotlight-nav-shadow",
+
+            "relative h-11 rounded-full transition-all duration-300 overflow-hidden",
+          )}
+        >
+          <ul className="relative flex items-center h-full px-2 gap-0 z-[10]">
+            {items.map((item, idx) => (
+              <li key={idx} className="relative h-full flex items-center">
+                <Link
+                  to={item.href}
+                  data-index={idx}
+                  onClick={() => handleItemClick(item, idx)}
+                  className={cn(
+                    "px-4 py-2 text-sm font-medium rounded-full transition",
+
+                    activeIndex === idx
+                      ? "text-black dark:text-cyan-500"
+                      : "text-neutral-500 hover:text-black dark:hover:text-cyan-500",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* RIGHT SWITCH */}
+
+        <Switch />
+      </div>
     </div>
   );
 }

@@ -1,18 +1,26 @@
-import React from 'react';
-import AppRouter from './routers/router'; 
-import { Toaster } from 'react-hot-toast'; 
+import React from "react";
+import AppRouter from "./routers/router";
+import { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  return (
-    <div className="antialiased selection:bg-cyan-500/30">
+  const darkMode = useSelector((state) => state.theme.darkMode);
 
-      <Toaster 
+  return (
+    <div
+      className={`antialiased selection:bg-cyan-500/30 ${
+        darkMode ? "dark bg-zinc-950 text-white" : "bg-white text-black"
+      }`}
+    >
+      <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            background: '#111827',
-            color: '#fff',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: darkMode ? "#111827" : "#ffffff",
+
+            color: darkMode ? "#ffffff" : "#000000",
+
+            border: "1px solid rgba(255,255,255,0.1)",
           },
         }}
       />
