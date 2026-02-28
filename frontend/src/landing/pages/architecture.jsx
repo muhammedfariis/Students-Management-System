@@ -143,8 +143,8 @@ const ArchitecturePage = () => {
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition duration-1000" />
               <div className="relative h-64 w-64 rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 flex items-center justify-center overflow-hidden">
-                <Users size={100} className="text-zinc-300 dark:text-zinc-800 absolute opacity-20" />
-                <span className="text-8xl font-black italic text-cyan-500">F.</span>
+                <Users size={100} className="text-blue-950-300 dark:text-blue-950-800 absolute opacity-20" />
+                <span className="text-8xl font-black italic text-cyan-500"></span>
               </div>
             </div>
             
@@ -154,9 +154,7 @@ const ArchitecturePage = () => {
               <p className="text-zinc-400 leading-relaxed mb-8">
                 "We didn't just build an app; we engineered a failsafe environment where data loss is mathematically improbable. Every line of code is a commitment to institutional transparency."
               </p>
-              <a href="#" className="inline-flex items-center gap-4 text-cyan-500 font-black italic uppercase tracking-widest text-xs border-b-2 border-cyan-500 pb-2 hover:gap-8 transition-all">
-                Full Technical Portfolio <MousePointer2 size={16} />
-              </a>
+            
             </div>
           </div>
         </div>
