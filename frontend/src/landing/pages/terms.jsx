@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/common/landingFooter";
 import {
   ShieldCheck,
@@ -16,75 +16,99 @@ import {
   Cpu,
   AlertTriangle,
   Ban,
+  Loader2,
+  Download,
 } from "lucide-react";
 
 import { SpotlightNavbar } from "../components/common/navbar";
 import ParallaxElement from "../components/ui/parallaxElament";
 
 const Terms = () => {
-  // Sync with your Redux store
   const { mode } = useSelector((state) => state.theme);
+  
+  // States for button interactions
+  const [status, setStatus] = useState("idle"); 
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [hasDownloaded, setHasDownloaded] = useState(false);
+
+  const handleAccept = () => {
+    setStatus("loading");
+    setTimeout(() => {
+      setStatus("success");
+    }, 2500);
+  };
+
+  const handleDownload = () => {
+    setIsDownloading(true);
+    
+   
+    const fileUrl = "/pdf/Generate PDF Terms and Conditions.pdf"; 
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "AttendeX Terms and Conditions.pdf";
+    
+    setTimeout(() => {
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setIsDownloading(false);
+      setHasDownloaded(true);
+      
+      setTimeout(() => setHasDownloaded(false), 3000);
+    }, 2000);
+  };
 
   const sections = [
     {
       title: "1. System Authorization",
       icon: <Fingerprint className="text-cyan-500" />,
-      content:
-        "By accessing Attendex, you agree to provide valid institutional credentials. The system logic grants access levels based on Roles (Admin, Faculty, Student). Unauthorized attempts to bypass Batch security or API endpoints are strictly logged.",
+      content: "By accessing Attendex, you agree to provide valid institutional credentials. The system logic grants access levels based on Roles (Admin, Faculty, Student). Unauthorized attempts to bypass Batch security or API endpoints are strictly logged.",
     },
     {
       title: "2. Attendance & Automation",
       icon: <CheckCircle2 className="text-emerald-500" />,
-      content:
-        "Attendex utilizes server-side cron jobs (11:00 PM nightly sweeps) to finalize daily records. Users acknowledge that attendance data is processed in real-time and 'Late' thresholds are determined by institutional logic gates.",
+      content: "Attendex utilizes server-side cron jobs (11:00 PM nightly sweeps) to finalize daily records. Users acknowledge that attendance data is processed in real-time and 'Late' thresholds are determined by institutional logic gates.",
     },
     {
       title: "3. Assignment & Submissions",
       icon: <FileText className="text-purple-500" />,
-      content:
-        "The Assignment Module allows digital submission and grading. Users are responsible for the integrity of uploaded files. Attendex performs automated timestamping; late submissions are flagged based on the zero-friction logic engine.",
+      content: "The Assignment Module allows digital submission and grading. Users are responsible for the integrity of uploaded files. Attendex performs automated timestamping; late submissions are flagged based on the zero-friction logic engine.",
     },
     {
       title: "4. Data Privacy & Logs",
       icon: <Database className="text-blue-500" />,
-      content:
-        "We employ Zero-Trust architecture. Every action (marking batches, adding students, viewing finance) is cryptographically signed. We store activity logs for audit trails, ensuring data transparency across all institutional nodes.",
+      content: "We employ Zero-Trust architecture. Every action (marking batches, adding students, viewing finance) is cryptographically signed. We store activity logs for audit trails, ensuring data transparency across all institutional nodes.",
     },
     {
       title: "5. Financial Ledger",
       icon: <Scale className="text-amber-500" />,
-      content:
-        "The Finance module tracks revenue and collection rates. While our pipelines operate at 42ms latency, users must verify manual entry accuracy. Attendex is not liable for data discrepancies caused by incorrect batch input.",
+      content: "The Finance module tracks revenue and collection rates. While our pipelines operate at 42ms latency, users must verify manual entry accuracy. Attendex is not liable for data discrepancies caused by incorrect batch input.",
     },
     {
       title: "6. Intellectual Property",
       icon: <Cpu className="text-pink-500" />,
-      content:
-        "All logic gates, UI components, and the Attendex brand identity are exclusive property. Users are prohibited from reverse-engineering the frontend bundle or scraping data via unauthorized bots.",
+      content: "All logic gates, UI components, and the Attendex brand identity are exclusive property. Users are prohibited from reverse-engineering the frontend bundle or scraping data via unauthorized bots.",
     },
     {
       title: "7. User Conduct",
       icon: <Users className="text-indigo-500" />,
-      content:
-        "Users must not use Attendex to upload defamatory or infringing content. Any 'gaming' of the attendance system is considered a violation of institutional integrity and will be reported to administration.",
+      content: "Users must not use Attendex to upload defamatory or infringing content. Any 'gaming' of the attendance system is considered a violation of institutional integrity and will be reported to administration.",
     },
     {
       title: "8. System Reliability",
       icon: <Globe className="text-cyan-400" />,
-      content:
-        "While we aim for 99.9% uptime, Attendex is provided on an 'as-is' basis. Scheduled maintenance for logic upgrades will be communicated 24 hours in advance.",
+      content: "While we aim for 99.9% uptime, Attendex is provided on an 'as-is' basis. Scheduled maintenance for logic upgrades will be communicated 24 hours in advance.",
     },
     {
       title: "9. Protocol Termination",
       icon: <Ban className="text-red-500" />,
-      content:
-        "Attendex reserves the right to suspend access to any User or Batch that poses a security risk or fails to comply with institutional payment terms.",
+      content: "Attendex reserves the right to suspend access to any User or Batch that poses a security risk or fails to comply with institutional payment terms.",
     },
     {
       title: "10. Limitation of Liability",
       icon: <AlertTriangle className="text-orange-500" />,
-      content:
-        "To the maximum extent permitted by law, Attendex shall not be liable for any indirect or consequential damages arising out of the use or inability to use the system logic.",
+      content: "To the maximum extent permitted by law, Attendex shall not be liable for any indirect or consequential damages arising out of the use or inability to use the system logic.",
     },
   ];
 
@@ -173,36 +197,52 @@ const Terms = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
+              {/* ACCEPT BUTTON */}
               <motion.button
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "#06b6d4",
-                  color: "#ffffff",
-                  boxShadow: "0px 0px 30px rgba(6, 182, 212, 0.4)",
-                }}
+                onClick={handleAccept}
+                disabled={status !== "idle"}
+                whileHover={status === "idle" ? { scale: 1.05, boxShadow: "0px 0px 30px rgba(6, 182, 212, 0.4)" } : {}}
                 whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 bg-black dark:bg-white text-white dark:text-black font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all"
+                className={`relative overflow-hidden w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all duration-500 ${
+                  status === "success" 
+                  ? "bg-emerald-500 text-white" 
+                  : "bg-black dark:bg-white text-white dark:text-black hover:bg-cyan-500 dark:hover:bg-cyan-500 dark:hover:text-white"
+                } disabled:cursor-not-allowed`}
               >
-                Accept & Continue
+                <div className="flex items-center justify-center gap-3">
+                  {status === "loading" && <Loader2 className="animate-spin" size={20} />}
+                  {status === "idle" && "Accept & Continue"}
+                  {status === "loading" && "Marking Logs..."}
+                  {status === "success" && <div className="flex items-center gap-2"><CheckCircle2 size={20} /> Protocol Accepted</div>}
+                </div>
+                {status === "loading" && (
+                  <motion.div initial={{ x: "-100%" }} animate={{ x: "100%" }} transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                )}
               </motion.button>
 
+              {/* DOWNLOAD BUTTON - COLORFUL GRADIENT */}
               <motion.button
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "rgba(0,0,0,0.05)",
-                  borderColor: "rgba(0,0,0,0.3)",
-                }}
+                onClick={handleDownload}
+                disabled={isDownloading}
+                whileHover={{ scale: 1.05, boxShadow: "0px 0px 30px rgba(139, 92, 246, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 bg-transparent text-black dark:text-white border border-black/10 dark:border-white/10 font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all"
+                className={`relative overflow-hidden w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 font-black italic rounded-full uppercase tracking-tighter text-base md:text-lg transition-all duration-500 
+                  ${hasDownloaded ? "bg-emerald-500 text-white" : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"}
+                  hover:from-violet-500 hover:to-indigo-500 disabled:opacity-80 disabled:cursor-wait`}
               >
-                Download PDF
+                <div className="flex items-center justify-center gap-3">
+                  {isDownloading ? <Loader2 className="animate-spin" size={20} /> : hasDownloaded ? <CheckCircle2 size={20} /> : <Download size={20} />}
+                  {isDownloading ? "Generating..." : hasDownloaded ? "Downloaded" : "Download PDF"}
+                </div>
+                {/* Colorful Shimmer on Hover */}
+                <div className="absolute inset-0 opacity-0 hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000" />
               </motion.button>
             </div>
           </motion.div>
         </section>
 
         {/* --- FOOTER --- */}
-       <Footer/>
+        <Footer/>
       </div>
     </div>
   );
