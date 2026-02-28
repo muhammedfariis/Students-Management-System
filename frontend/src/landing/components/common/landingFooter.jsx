@@ -80,8 +80,12 @@ const Footer = () => {
             
             <div className="lg:col-span-4 space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-black dark:bg-white flex items-center justify-center rounded-lg shadow-lg">
-                  <Terminal className="text-white dark:text-black" size={20} />
+                <div className="w-fit h-25 bg-black dark:bg-white flex items-center justify-center rounded-3xl shadow-lg">
+                  {mode === 'dark' ? (
+                    <img src="/images/attLogoDark.png" alt="Attendex Dark Logo" className="w-full h-full  object-contain" />
+                  ) : (
+                    <img src="/images/attLogoLight.png" alt="Attendex Light Logo" className="w-full h-full object-contain" />
+                  )}
                 </div>
                 <h2 className="text-2xl font-bold tracking-tight dark:text-white uppercase italic">
                   Attend<span className="text-cyan-500">ex</span>
