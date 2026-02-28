@@ -8,6 +8,8 @@ import FeaturesPage from '../landing/pages/features';
 import ContactPage from '../landing/pages/contact';
 import PrivacyPage from '../landing/pages/privacy';
 import ArchitecturePage from '../landing/pages/architecture';
+import SystemLogicPage from '../landing/pages/systemLogic';
+import DocumentationPage from '../landing/pages/documentationpage';
 
 const AppRouter = () => {
   return (
@@ -21,8 +23,10 @@ const AppRouter = () => {
         <Route  path='/contact' element={<ContactPage/>}/>
         <Route  path='/privacy' element={<PrivacyPage/>}/>
         <Route  path='/architecture' element={<ArchitecturePage/>}/>
+        <Route path="/logics"  element={<SystemLogicPage/>}/>
+        <Route path="/docs"  element={<DocumentationPage/>}/>
 
-
+         
 
 
 
