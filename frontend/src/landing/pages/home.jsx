@@ -232,6 +232,7 @@ const LandingPage = () => {
               desc: "9:00 AM server-side thresholds for total automation.",
               icon: <Clock />,
               gradient: { from: "#06b6d4", via: "#0891b2", to: "#0284c7" },
+              
             },
             {
               title: "JWT Vault",
@@ -250,7 +251,7 @@ const LandingPage = () => {
               <motion.div
                 whileHover={{ y: -16, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="relative rounded-[2.5rem] md:rounded-[3rem] overflow-hidden h-[380px] md:h-[450px] flex flex-col justify-end p-8 md:p-10 group cursor-pointer"
+                className="relative rounded-[2.5rem] md:rounded-[3rem] overflow-hidden  h-[380px] md:h-[450px] flex flex-col justify-end p-8 md:p-10 group cursor-pointer"
                 style={{
                   background:
                     "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.95) 100%)",
@@ -262,7 +263,7 @@ const LandingPage = () => {
                   className="absolute inset-0 opacity-0 dark:opacity-100 transition-opacity duration-300 rounded-[2.5rem] md:rounded-[3rem]"
                   style={{
                     background:
-                      "linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+                      "linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255) 100%)",
                     border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 />
@@ -294,7 +295,7 @@ const LandingPage = () => {
                 >
                   {React.cloneElement(item.icon, { size: 24 })}
                 </div>
-                <h3 className="relative z-10 text-3xl md:text-4xl font-bold mb-4 tracking-tighter uppercase italic text-black dark:text-white">
+                <h3 className="relative z-10 text-3xl md:text-4xl font-bold mb-4 tracking-tighter uppercase italic text-violet-400 dark:text-violet-500">
                   {item.title}
                 </h3>
                 <p className="relative z-10 text-gray-500 dark:text-gray-400 text-base md:text-lg leading-relaxed">
