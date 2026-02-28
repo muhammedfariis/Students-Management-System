@@ -12,7 +12,6 @@ import {
 import { SpotlightNavbar } from "../components/common/navbar";
 import Footer from "../components/common/landingFooter";
 
-// --- EXTREME PARALLAX WRAPPER ---
 const ParallaxLayer = ({ children, speed = 1, className = "" }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({

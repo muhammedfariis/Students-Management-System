@@ -8,6 +8,7 @@ import {
   Binary, Rocket, Workflow, Radio, Sparkles, Terminal,
   Box, Activity, Lock, Share2, ChevronRight, MousePointer2
 } from "lucide-react";
+import {useNavigate} from "react-router-dom"
 
 // Assuming these components exist based on your previous structure
 import { SpotlightNavbar } from "../components/common/navbar";
@@ -37,6 +38,7 @@ const SystemLogicPage = () => {
   // Theme logic - defaults to dark if not found
   const mode = useSelector((state) => state.theme?.mode || 'dark');
   const containerRef = useRef(null);
+  const Nav = useNavigate()
 
   return (
     <div 
@@ -176,7 +178,8 @@ const SystemLogicPage = () => {
               <p className="text-xl text-zinc-400 max-w-xl mb-12">
                 Join 500+ institutions leveraging our hardware-forged logic for mission-critical operations.
               </p>
-              <button className="flex items-center gap-6 bg-cyan-500 hover:bg-white hover:text-black text-black px-12 py-6 rounded-full font-black italic uppercase tracking-tighter transition-all group">
+
+              <button onClick={()=>Nav("/register")} className="flex items-center gap-6 bg-cyan-500 hover:bg-white hover:text-black text-black px-12 py-6 rounded-full font-black italic uppercase tracking-tighter transition-all group">
                 Request API Access <ChevronRight className="group-hover:translate-x-2 transition-transform" />
               </button>
             </div>
