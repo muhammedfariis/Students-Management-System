@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import {Link} from "react-router-dom"
 import { 
   Target, Cpu, Zap, ShieldCheck, Users, Code2, Globe, 
   Layers, MousePointer2, Fingerprint, Database, Binary,
@@ -189,9 +190,12 @@ const About = () => {
            </div>
            <div className="flex flex-col justify-center">
               <h2 className="text-6xl font-black italic uppercase text-white leading-none mb-8">Ready to <br /> Deploy.</h2>
-              <button className="px-12 py-6 bg-cyan-500 text-black font-black italic uppercase rounded-full hover:bg-white transition-colors">
+              <Link to="/register">
+                   <button className="px-12 py-6 bg-cyan-500 text-black font-black italic uppercase rounded-full hover:bg-white transition-colors">
                  Access API Key
               </button>
+              </Link>
+            
            </div>
         </div>
       </section>
