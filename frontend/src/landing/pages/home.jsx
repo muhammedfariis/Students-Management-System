@@ -41,6 +41,7 @@ import Security from "../../assets/icons8-security-96.png";
 import Dashboard from "../../assets/icons8-dashboard-96.png";
 import Contact from "../../assets/icons8-contacts-96.png";
 import Iphone from "../../assets/icons8-iphone-14-96.png";
+import { Link } from "react-router-dom";
 
 const GradientCard = ({ children, from, via, to, className = "" }) => (
   <div
@@ -114,8 +115,10 @@ const LandingPage = () => {
                   Infrastructure
                 </span>
               </p>
-
+               <Link to="/register">
+             
               <motion.button
+              
                 whileHover={{
                   scale: 1.05,
                   boxShadow: "0 20px 50px rgba(6,182,212,0.3)",
@@ -128,6 +131,7 @@ const LandingPage = () => {
               >
                 Launch System
               </motion.button>
+                </Link>
             </div>
           </motion.div>
         </div>
@@ -808,7 +812,9 @@ const LandingPage = () => {
               Scaling.
             </span>
           </h2>
-          <motion.button
+          <Link to="/register"> 
+          
+            <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
             className="group relative px-10 md:px-20 py-6 md:py-10 text-white text-xl md:text-4xl font-black rounded-full overflow-hidden shadow-2xl"
@@ -824,11 +830,17 @@ const LandingPage = () => {
                 background: "linear-gradient(135deg,#06b6d4,#0891b2)",
               }}
             />
+            
             <span className="relative z-10">GET SYSTEM ACCESS</span>
             <span className="hidden md:inline relative z-10 ml-4 opacity-0 group-hover:opacity-100 transition-all">
               →
             </span>
+
           </motion.button>
+          
+          </Link>
+        
+
         </div>
       </section>
 
