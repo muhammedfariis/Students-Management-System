@@ -534,7 +534,7 @@ const LandingPage = () => {
             </ParallaxElement>
 
             <ParallaxElement
-              speed={5}
+              speed={10}
               className="relative z-10 w-full max-w-5xl aspect-video bg-white dark:bg-zinc-900 rounded-[3rem] border border-black/5 dark:border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.2)] p-10 flex flex-col gap-8 overflow-hidden"
             >
               <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-6">
@@ -596,7 +596,7 @@ const LandingPage = () => {
             </ParallaxElement>
 
             <ParallaxElement
-              speed={12}
+              speed={6}
               className="absolute -left-16 bottom-20 z-20 bg-black dark:bg-white text-white dark:text-black p-10 rounded-[2.5rem] shadow-2xl -rotate-6 hidden lg:block"
             >
               <Zap size={48} className="mb-4" />
@@ -722,7 +722,7 @@ const LandingPage = () => {
         <MeshBackground />
 
         <ParallaxElement
-          speed={-2}
+          speed={2}
           className="relative z-10 text-center mb-32 px-6"
         >
           <p className="uppercase tracking-[0.5em] text-xs font-black text-cyan-500 mb-6">
@@ -752,7 +752,7 @@ const LandingPage = () => {
         </ParallaxElement>
 
         <ParallaxElement
-          speed={7}
+          speed={5}
           className="absolute left-[15%] top-[50%] z-40 hidden xl:block"
         >
           <div className="p-8 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-[2.5rem] shadow-3xl max-w-[280px]">
