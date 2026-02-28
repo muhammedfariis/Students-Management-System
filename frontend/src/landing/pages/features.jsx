@@ -19,6 +19,7 @@ import {
 import { SpotlightNavbar } from "../components/common/navbar";
 import Footer from "../components/common/landingFooter";
 import MeshBackground from "../components/common/mesh";
+import { Link } from "react-router-dom";
 
 const EXTREME_BEZIER = [0.16, 1, 0.3, 1];
 
@@ -228,9 +229,13 @@ const FeaturesPage = () => {
                 Manually adding students is a relic of the past. Use our <span className="text-cyan-500 font-bold">Neural BatchAdd</span> to 
                 populate entire campuses in seconds.
               </p>
-              <button className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-cyan-500 border-b-2 border-cyan-500 pb-2 hover:gap-8 transition-all">
+              <Link to="/docs">
+               <button className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-cyan-500 border-b-2 border-cyan-500 pb-2 hover:gap-8 transition-all">
                  Read Documentation <ArrowDownRight size={16} />
               </button>
+              
+              </Link>
+             
            </div>
         </div>
       </section>
@@ -241,7 +246,9 @@ const FeaturesPage = () => {
           <h2 className="text-8xl md:text-[12rem] font-black italic uppercase tracking-tighter leading-none mb-12">
             Build <br /> <span className="text-cyan-500">Fast.</span>
           </h2>
-          <motion.button
+          <Link to="/register">
+          
+              <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             transition={{ ease: EXTREME_BEZIER }}
@@ -249,6 +256,9 @@ const FeaturesPage = () => {
           >
             Start Implementation
           </motion.button>
+          
+          </Link>
+      
         </motion.div>
       </section>
 
