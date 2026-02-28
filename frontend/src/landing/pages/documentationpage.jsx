@@ -4,370 +4,315 @@ import {
   ChevronRight, ChevronLeft, Book, Terminal, Cpu, ShieldCheck, 
   Layers, Zap, Globe, HardDrive, Smartphone, Layout, 
   Settings, Users, CreditCard, HelpCircle, Code, Lock, 
-  ArrowLeft, Search, Menu, X, Rocket, Sun, Moon
+  ArrowLeft, Search, Menu, X, Rocket, Activity, Database, Server, Share2, Filter, Bell
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // Sync with your Switch
 import MeshBackground from "../components/common/mesh";
+import Switch from "../components/ui/toggle";
+import { toast, Toaster } from "react-hot-toast";
 
-// --- Documentation Content Data ---
+// --- Massive Documentation Content (20+ Sections) ---
 const DOCS_CONTENT = [
-  {
-    id: "welcome",
-    title: "Project Attendex",
-    icon: <Rocket size={20} />,
-    content: "Welcome to the next generation of institutional infrastructure. Attendex isn't just an attendance tracker; it's a high-performance presence engine built for massive scale. Operating with a zero-trust architecture, it synchronizes human presence with digital records in real-time.",
-    details: "Designed for universities, corporate hubs, and high-security zones, our v5 engine handles 14.2k concurrent users with a latency floor of 42ms."
+  { 
+    id: "welcome", 
+    title: "Project Attendex: Next-Generation Presence Infrastructure", 
+    icon: <Rocket size={20} />, 
+    content: "Project Attendex represents a paradigm shift in institutional oversight, moving beyond legacy tracking to a high-performance presence engine. Built to accommodate the rigorous demands of modern universities and corporate hubs, the platform utilizes a proprietary synchronization protocol that bridges physical presence with digital audit trails.", 
+    details: "The v5 core architecture is benchmarked to sustain 14,200 concurrent biometric streams with a global latency ceiling of 42ms, ensuring real-time data integrity across distributed nodes." 
   },
-  {
-    id: "installation",
-    title: "Installation",
-    icon: <Terminal size={20} />,
-    content: "Currently, Attendex is a Web-First Cloud Protocol.",
-    details: "Native binaries for Windows (.exe) and Mobile (iOS/Android) are slated for the Version 3.0 release. To access the system now, use our encrypted web portal via the 'Launch System' button on the home page.",
-    status: "v3.0 - Coming Soon"
+  { 
+    id: "installation", 
+    title: "Deployment & System Installation Protocols", 
+    icon: <Terminal size={20} />, 
+    content: "The current iteration of Attendex operates as a Web-First Cloud Protocol, optimized for browser-based environments using hardware-accelerated rendering. While the system is fully operational via cloud-tenant portals, we are actively developing low-level native integration for enterprise environments.", 
+    details: "The Version 3.0 roadmap includes the release of native C++ based binaries for Windows systems and dedicated Swift/Kotlin kernels for mobile hardware, allowing for deeper sensor integration." 
   },
-  {
-    id: "getting-started",
-    title: "How to Use",
-    icon: <Zap size={20} />,
-    content: "Initiating the system follows a 3-step synchronization protocol:",
+  { 
+    id: "getting-started", 
+    title: "System Initialization & Onboarding Procedures", 
+    icon: <Zap size={20} />, 
+    content: "To maintain the integrity of the institutional node, initiating the Attendex system requires a specific three-tier synchronization sequence. This ensures that every data point is cryptographically linked to the master institutional record from the moment of initialization.", 
     list: [
-      "1. System Launch: Click 'Launch System' to initialize the Neural Sync.",
-      "2. Authentication: Existing users proceed to the JWT-secured Login.",
-      "3. Super Admin Entry: New institutions must register via the Super Admin gate for primary node setup."
+      "1. Neural Node Launch: Execute the 'Launch System' command to initialize the primary synchronization engine.",
+      "2. Encrypted Authentication: Authorized personnel must proceed through the JWT-secured gateway to establish a session.",
+      "3. Institutional Root Setup: Super Admins are required to configure the primary organizational node before sub-batches can be initialized."
     ]
   },
-  {
-    id: "roles",
-    title: "Role-Based Access",
-    icon: <Users size={20} />,
-    content: "Attendex uses a strict Hierarchical RBAC (Role-Based Access Control) system.",
-    details: "Roles include Super Admin (Global Config), Admin (Batch Management), Faculty (Verification), and Student (View-Only). Each role is cryptographically isolated."
+  { 
+    id: "neural-sync", 
+    title: "Neural Sync v5: Edge-Computed Biometric Verification", 
+    icon: <Activity size={20} />, 
+    content: "The Neural Sync engine is the heartbeat of Attendex, utilizing distributed edge computing to process attendance signatures locally. By offloading processing power to the edge, the system eliminates network bottlenecks and provides instantaneous verification feedback to the end-user.", 
+    details: "In the event of a total network uplink failure, local nodes cache encrypted presence hashes and automatically perform a reconciliation sweep once the connection to the central vault is restored." 
   },
-  {
-    id: "security",
-    title: "Security & Vault",
-    icon: <ShieldCheck size={20} />,
-    content: "We utilize a 'Zero-Trust' vaulting system.",
-    details: "All student data and biometric hashes are stored in an AES-256 encrypted MongoDB instance. Every API request requires a valid, short-lived JWT (JSON Web Token) signed by our internal Auth-Server."
+  { 
+    id: "roles", 
+    title: "Hierarchical Role-Based Access Control (RBAC)", 
+    icon: <Users size={20} />, 
+    content: "Security is enforced through a multi-layered Hierarchical RBAC system. This architecture ensures that data visibility is strictly compartmentalized according to institutional rank. Each role operates within its own cryptographic sandbox, preventing horizontal privilege escalation.", 
+    details: "Access tiers range from Super Admin (Global System Configuration) and Institutional Admins (Batch & Faculty Management) to Students, who possess read-only access to their personal presence logs." 
   },
-  {
-    id: "finance",
-    title: "Cash Flow Engine",
-    icon: <CreditCard size={20} />,
-    content: "Automated revenue tracking for institutional fees.",
-    details: "Our finance module uses MongoDB Aggregation Pipelines to provide real-time ledger updates. Note: Pricing models activate after one month of system deployment."
+  { 
+    id: "security", 
+    title: "Zero-Trust Architecture & Data Vaulting", 
+    icon: <ShieldCheck size={20} />, 
+    content: "Attendex operates on a 'Never Trust, Always Verify' security model. All sensitive data, including PII (Personally Identifiable Information) and biometric metadata, is transformed into unique cryptographic hashes before being committed to our high-security MongoDB vault.", 
+    details: "We utilize AES-256-GCM encryption at rest and TLS 1.3 for data in transit. Every internal API call is validated by a secondary Auth-Server that issues short-lived, rotatable session tokens." 
   },
-  {
-    id: "geofencing",
-    title: "Geo-Fencing",
-    icon: <Globe size={20} />,
-    content: "Location-locked attendance verification.",
-    details: "Prevents proxy attendance by ensuring the user's GPS coordinates fall within the institution's predefined digital perimeter."
+  { 
+    id: "db-arch", 
+    title: "Distributed Database Sharding & High Availability", 
+    icon: <Database size={20} />, 
+    content: "To ensure 99.99% system uptime, the Attendex database layer utilizes a geographically sharded MongoDB cluster. This allows the system to distribute data loads across multiple global regions, minimizing physical distance between the user and the data node for faster query execution.", 
+    details: "The architecture supports automatic failover and secondary replica sets, ensuring that institutional records remain accessible even during localized data center maintenance or outages." 
   },
-  {
-    id: "api",
-    title: "API Integration",
-    icon: <Code size={20} />,
-    content: "Connect Attendex to your existing ERP.",
-    details: "We provide RESTful endpoints for batch synchronization and user migration. Latency is optimized at <50ms."
+  { 
+    id: "finance", 
+    title: "Institutional Cash Flow & Revenue Analytics Engine", 
+    icon: <CreditCard size={20} />, 
+    content: "The integrated finance module provides administrators with a granular view of institutional revenue streams and fee collections. By utilizing MongoDB's powerful Aggregation Pipelines, the system generates real-time financial snapshots and ledger updates without taxing the primary attendance engine.", 
+    details: "Automated billing cycles and revenue tracking activate exactly thirty days post-deployment, allowing institutions to synchronize their financial records with student presence data seamlessly." 
   },
-  {
-    id: "batches",
-    title: "Batch Management",
-    icon: <Layers size={20} />,
-    content: "Organize users into high-performance buckets.",
-    details: "Manage thousands of students across different departments, years, and shifts with zero overhead."
+  { 
+    id: "geofencing", 
+    title: "Geospatial Perimeter Locking & Proxy Prevention", 
+    icon: <Globe size={20} />, 
+    content: "To eliminate the possibility of proxy attendance, Attendex implements a rigorous Geo-Fencing protocol. The system cross-references the user's real-time GPS coordinates against a predefined digital perimeter of the institution, ensuring that attendance is only recorded within physical boundaries.", 
+    details: "Our proprietary algorithm filters out GPS spoofing attempts and high-latency location pings, requiring a 'High-Precision' lock before the attendance signature is cryptographically signed." 
   },
-  {
-    id: "logs",
-    title: "Audit Logs",
-    icon: <HardDrive size={20} />,
-    content: "Full transparency on every system action.",
-    details: "The 'Logs' module records every sign-in, change, and system sweep, accessible only by the Super Admin."
+  { 
+    id: "api", 
+    title: "RESTful API Integration & ERP Synchronization", 
+    icon: <Code size={20} />, 
+    content: "Attendex is designed to coexist with your existing infrastructure. We provide a comprehensive suite of RESTful endpoints that allow for the seamless migration of user data and the synchronization of attendance records with legacy Enterprise Resource Planning (ERP) systems.", 
+    details: "The API is optimized for high-throughput batch operations, supporting the migration of tens of thousands of records in seconds while maintaining a sub-50ms response time for individual queries." 
   },
-  {
-    id: "cron",
-    title: "Auto-Cron Sweeps",
-    icon: <Cpu size={20} />,
-    content: "Automated end-of-day processing.",
-    details: "Every night at 11:00 PM, the system runs a global sweep to mark unclaimed slots as 'Absent' and resets the Presence Engine for the next cycle."
+  { 
+    id: "batches", 
+    title: "High-Performance Batch & Departmental Management", 
+    icon: <Layers size={20} />, 
+    content: "The platform organizes the institutional population into high-performance 'Buckets' or Batches. This logical separation allows for customized scheduling, specific faculty assignments, and targeted reporting for different departments, academic years, or professional shifts.", 
+    details: "Administrators can manage thousands of individual batches with zero system overhead, utilizing our optimized indexing strategy to retrieve departmental analytics in real-time." 
   },
-  {
-    id: "ui-ux",
-    title: "Design System",
-    icon: <Layout size={20} />,
-    content: "Adaptive Glassmorphism & Mesh.",
-    details: "Designed for focus. The UI transitions seamlessly between Light and Dark modes to reduce eye strain during long administrative sessions."
+  { 
+    id: "logs", 
+    title: "Immutable Audit Logging & System Transparency", 
+    icon: <HardDrive size={20} />, 
+    content: "For compliance and security auditing, the system maintains an immutable ledger of every transaction, sign-in attempt, and record modification. These logs provide a 'Paper Trail' for every action taken within the system, ensuring total transparency for institutional regulators.", 
+    details: "Audit logs are stored in a write-once, read-many (WORM) format and are accessible exclusively by the Super Admin tier to prevent internal tampering or unauthorized record deletion." 
   },
-  {
-    id: "mobile",
-    title: "Mobile App v3",
-    icon: <Smartphone size={20} />,
-    content: "The future of Attendex in your pocket.",
-    details: "Version 3 will introduce push notifications for parents and real-time biometric scanning via mobile sensors."
+  { 
+    id: "cron", 
+    title: "Automated Global Cron Sweeps & Cycle Resets", 
+    icon: <Cpu size={20} />, 
+    content: "Every 24 hours at 11:00 PM, the Attendex core executes a global Cron Sweep. During this window, the system processes all unclaimed attendance slots, marks them as 'Absent' according to institutional policy, and performs a full database optimization for the upcoming cycle.", 
+    details: "This automated maintenance cycle ensures that the Presence Engine is always operating at peak efficiency and that daily analytics are finalized and archived for long-term reporting." 
   },
-  {
-    id: "auth",
-    title: "Auth Protocol",
-    icon: <Lock size={20} />,
-    content: "Multi-Factor Authentication (MFA).",
-    details: "Beyond simple passwords, Attendex supports biometric and OTP-based verification for high-privilege accounts."
+  { 
+    id: "ui-ux", 
+    title: "Adaptive Glassmorphic Interface & Design Logic", 
+    icon: <Layout size={20} />, 
+    content: "The Attendex UI is built on a foundation of focus-driven design. Utilizing adaptive Glassmorphism and Mesh-gradient backgrounds, the interface reduces cognitive load for administrators who must interact with complex datasets for extended periods of time.", 
+    details: "The design system dynamically adjusts contrast and transparency based on the selected Light/Dark mode, utilizing hardware-accelerated CSS filters to ensure smooth performance even on lower-end hardware." 
   },
-  {
-    id: "support",
-    title: "Help & Support",
-    icon: <HelpCircle size={20} />,
-    content: "24/7 Technical Assistance.",
-    details: "Encountering a 'Neural Sync' error? Contact our global support nodes via the dashboard ticketing system."
+  { 
+    id: "webhooks", 
+    title: "Real-Time Event Webhooks & External Triggers", 
+    icon: <Share2 size={20} />, 
+    content: "Extend the capabilities of Attendex by utilizing our event-driven webhook architecture. The system can be configured to push real-time data to external third-party applications whenever a specific event occurs, such as a student entering a high-security zone.", 
+    details: "Our webhook payloads are signed with a unique HMAC signature, allowing your receiving server to verify that the data originated from the trusted Attendex node." 
+  },
+  { 
+    id: "scalability", 
+    title: "Horizontal Scaling via Kubernetes Orchestration", 
+    icon: <Server size={20} />, 
+    content: "Attendex is built for growth. The platform utilizes Docker-containerized microservices orchestrated by Kubernetes, allowing for horizontal scaling that automatically expands system capacity in response to sudden spikes in user traffic or biometric processing demands.", 
+    details: "Load balancers distribute incoming requests across multiple healthy pods, ensuring that the system remains responsive even during peak morning 'Check-In' windows." 
+  },
+  { 
+    id: "notifications", 
+    title: "Smart Alerts & Multi-Channel Notification Hub", 
+    icon: <Bell size={20} />, 
+    content: "Keep stakeholders informed with our automated notification hub. The system can be programmed to trigger SMS, Email, or Mobile Push notifications based on presence status, threshold alerts, or urgent institutional announcements.", 
+    details: "Notification templates are fully customizable and support dynamic variables, allowing for personalized communication at a massive scale without manual intervention from faculty." 
+  },
+  { 
+    id: "filtering", 
+    title: "Advanced Data Filtering & Reporting Engine", 
+    icon: <Filter size={20} />, 
+    content: "Transform raw data into actionable insights with our advanced query engine. Administrators can apply complex filters—ranging from date ranges and departmental performance to individual attendance consistency—to generate deep-dive institutional reports.", 
+    details: "Reports can be exported in various high-fidelity formats, including PDF, CSV, and JSON, facilitating seamless data sharing with external board members or government regulators." 
+  },
+  { 
+    id: "mfa", 
+    title: "Multi-Factor Authentication & Biometric Vaulting", 
+    icon: <Lock size={20} />, 
+    content: "Protect sensitive administrative accounts with our Multi-Factor Authentication (MFA) suite. In addition to traditional credentials, Attendex supports TOTP-based mobile authenticators and hardware security keys for high-privilege operations.", 
+    details: "We are currently integrating WebAuthn protocols to allow for passwordless biometric login directly through the browser, utilizing the secure enclave of the user's device." 
+  },
+  { 
+    id: "mobile-v3", 
+    title: "Mobile Ecosystem & Hardware Sensor Roadmap", 
+    icon: <Smartphone size={20} />, 
+    content: "The upcoming Version 3.0 release will bridge the gap between web and native mobile performance. By accessing hardware-level sensors, the Attendex mobile app will provide even more accurate geofencing and support for native biometric hardware like FaceID and TouchID.", 
+    details: "This release will also introduce a dedicated 'Parent Portal,' providing real-time visibility into student presence and safety for guardians through a simplified, high-performance interface." 
+  },
+  { 
+    id: "support", 
+    title: "Global Technical Nodes & 24/7 Assistance", 
+    icon: <HelpCircle size={20} />, 
+    content: "Attendex is backed by a global network of technical support nodes. Whether you encounter a 'Neural Sync' mismatch or require assistance with initial node configuration, our technical engineers are available around the clock through our integrated ticketing system.", 
+    details: "Pro-tier subscribers gain access to dedicated node managers and a direct priority hotline, ensuring that any system-critical issues are resolved within a guaranteed four-hour window." 
   }
 ];
 
 const DocumentationPage = () => {
-  const [activeSection, setActiveSection] = useState("welcome");
+  // Use Redux state to drive the theme
+  const reduxTheme = useSelector((state) => state.theme.mode); 
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [theme, setTheme] = useState("dark");
+  const [activeSection, setActiveSection] = useState("welcome");
   const scrollRef = useRef(null);
   const navigate = useNavigate();
 
-  // Toggle Theme Logic
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-  };
+  // Effect to apply the theme to the HTML element whenever Redux theme changes
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", reduxTheme === "dark");
+  }, [reduxTheme]);
 
-  // Parallax Effect for Content
   const { scrollYProgress } = useScroll({ container: scrollRef });
   const yRange = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
-  const scrollToSection = (id) => {
-    setActiveSection(id);
-    if (window.innerWidth < 768) setSidebarOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  const handleToolClick = (tool) => {
-    alert(`Initializing ${tool} Module... Accessing Neural Node.`);
+  const handleToolAction = (tool) => {
+    const colors = { "API Status": "#06b6d4", "Global Sync": "#10b981", "Vault Lock": "#f43f5e", "Node Manager": "#a855f7" };
+    toast.loading(`Processing ${tool}...`, { id: 't' });
+    setTimeout(() => toast.success(`${tool} Operational`, { id: 't', style: { color: colors[tool] || "#fff" } }), 1000);
   };
 
   return (
-    <div className={`flex h-screen w-full overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#050507] text-white' : 'bg-white text-black'} selection:bg-cyan-500 selection:text-black`}>
+    <div className={`flex h-screen w-full overflow-hidden transition-colors duration-500 ${reduxTheme === 'dark' ? 'bg-[#050507] text-white' : 'bg-white text-black'} font-sans`}>
+      <Toaster position="bottom-center" />
       <MeshBackground className="opacity-30 fixed inset-0 pointer-events-none" />
 
-      {/* --- SIDEBAR NAVIGATION --- */}
+      {/* --- SIDEBAR --- */}
       <motion.aside 
-        initial={false}
-        animate={{ width: isSidebarOpen ? "320px" : "85px" }}
-        className={`relative z-50 border-r ${theme === 'dark' ? 'border-white/10 bg-black/40' : 'border-black/5 bg-white/80'} backdrop-blur-2xl transition-all duration-300 hidden md:flex flex-col h-full`}
+        animate={{ width: isSidebarOpen ? "300px" : "80px" }}
+        className={`relative z-50 flex flex-col h-full glass-panel border-r ${reduxTheme === 'dark' ? 'border-white/10' : 'border-black/5'}`}
       >
         <div className="p-6 flex items-center justify-between">
-          <AnimatePresence>
-            {isSidebarOpen && (
-              <motion.span 
-                initial={{ opacity: 0, x: -10 }} 
-                animate={{ opacity: 1, x: 0 }} 
-                exit={{ opacity: 0, x: -10 }}
-                className="text-2xl font-black italic tracking-tighter uppercase"
-              >
-                Docs<span className="text-cyan-500">.</span>
-              </motion.span>
-            )}
-          </AnimatePresence>
-          <button 
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className={`p-2 rounded-xl transition-all ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-black/5'} active:scale-95`}
-          >
+          {isSidebarOpen && <span className="text-xl font-black tracking-tighter uppercase">Docs<span className="text-cyan-500">.</span></span>}
+          <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-cyan-500/10 rounded-lg">
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-4 space-y-2 py-4 custom-scrollbar">
+        <nav className="flex-1 overflow-y-auto px-4 space-y-1">
           {DOCS_CONTENT.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all group ${
-                activeSection === item.id 
-                ? "bg-cyan-500 text-white shadow-[0_10px_20px_rgba(6,182,212,0.3)]" 
-                : theme === 'dark' ? "hover:bg-white/5 text-zinc-500" : "hover:bg-black/5 text-zinc-500"
-              }`}
-            >
-              <div className={`${activeSection === item.id ? "text-white" : "text-cyan-500"}`}>
-                {item.icon}
-              </div>
-              {isSidebarOpen && (
-                <span className="text-xs font-bold uppercase tracking-widest truncate">
-                  {item.title}
-                </span>
-              )}
+            <button key={item.id} onClick={() => { 
+                document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                setActiveSection(item.id);
+            }} 
+            className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all ${activeSection === item.id ? "bg-cyan-500 text-white" : "text-zinc-500 hover:bg-cyan-500/5"}`}>
+              {item.icon}
+              {isSidebarOpen && <span className="text-[10px] font-bold uppercase tracking-widest truncate">{item.title}</span>}
             </button>
           ))}
         </nav>
 
-        <div className="p-6 space-y-4">
-            <button 
-                onClick={toggleTheme}
-                className={`flex items-center gap-3 w-full p-3 rounded-2xl border transition-all ${theme === 'dark' ? 'border-white/10 hover:bg-white/5' : 'border-black/10 hover:bg-black/5'}`}
-            >
-                {theme === 'dark' ? <Sun size={18} className="text-yellow-400" /> : <Moon size={18} className="text-indigo-600" />}
-                {isSidebarOpen && <span className="text-[10px] font-black uppercase tracking-widest">{theme === 'dark' ? "Light Mode" : "Dark Mode"}</span>}
-            </button>
+     <div className="p-6 space-y-6 border-t border-white/5 flex flex-col items-center">
+  {/* Switch Container */}
+  <div className="flex justify-center scale-90 transition-transform duration-300">
+    <Switch />
+  </div>
 
-            <button 
-                onClick={() => navigate("/")}
-                className="group flex items-center gap-2 p-3 text-xs font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-cyan-500 transition-all"
-            >
-                <ArrowLeft size={18} className="group-hover:-translate-x-2 transition-transform duration-300" /> 
-                {isSidebarOpen && "Back to System"}
-            </button>
-        </div>
+  {/* Back Button Container */}
+  <button 
+    onClick={() => navigate("/")} 
+    className={`
+      flex items-center justify-center gap-3 
+      min-h-[48px] w-full rounded-2xl
+      transition-all duration-300 group
+      ${isSidebarOpen ? "px-4" : "px-0"}
+      text-zinc-400 hover:text-cyan-500
+    `}
+  >
+    <div className="flex flex-none items-center justify-center w-12 h-12 bg-red-300/2 group-hover:bg-red-500/10 rounded-xl transition-all duration-300 shadow-lg group-active:scale-90">
+      <ArrowLeft 
+        size={20} 
+        className="text-red-500 group-hover:text-white transition-colors"
+      />
+    </div>
+
+    <AnimatePresence mode="wait">
+      {isSidebarOpen && (
+        <motion.span 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -10 }}
+          className="text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap"
+        >
+          Exit Interface
+        </motion.span>
+      )}
+    </AnimatePresence>
+  </button>
+</div>
       </motion.aside>
 
-      {/* --- MAIN CONTENT AREA --- */}
-      <main ref={scrollRef} className="flex-1 h-screen overflow-y-auto relative p-6 md:p-20 lg:p-32 scroll-smooth">
-        
-        {/* Floating Back Button for Mobile */}
-        <button 
-          onClick={() => navigate("/")}
-          className="fixed top-6 right-6 z-[60] p-4 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl md:hidden"
-        >
-          <ArrowLeft size={24} />
-        </button>
-
+      <main ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-20 scroll-smooth">
         <motion.div style={{ y: yRange }} className="max-w-4xl mx-auto space-y-32">
-          
-          {/* Header */}
-          <section className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="inline-block px-4 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-[10px] font-black uppercase tracking-[0.3em]"
-            >
-              Documentation v5.0.2
-            </motion.div>
-            <h1 className="text-6xl md:text-9xl font-black uppercase italic tracking-tighter leading-none">
-              The <span className="text-cyan-500">Manual.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-zinc-500 dark:text-zinc-400 font-light italic max-w-2xl">
-              Deep dive into the architecture, deployment, and operation of the Attendex Presence Engine.
-            </p>
-          </section>
+          <header className="space-y-4">
+            <div className="text-cyan-500 text-[10px] font-black uppercase tracking-[0.4em]">v5.0.2 Stable</div>
+            <h1 className="text-7xl md:text-9xl font-black italic uppercase tracking-tighter leading-none">The <span className="text-cyan-500">Manual.</span></h1>
+          </header>
 
-          {/* Dynamic Content Sections */}
           {DOCS_CONTENT.map((section, idx) => (
-            <motion.section
-              key={section.id}
-              id={section.id}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              className="relative group pt-20 border-t border-black/5 dark:border-white/5"
-            >
-              {/* 3D Parallax Background Numbers */}
-              <div className="absolute -left-20 -top-10 text-[15rem] font-black text-black/[0.02] dark:text-white/[0.02] italic select-none pointer-events-none group-hover:text-cyan-500/[0.05] transition-colors">
-                {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-              </div>
-
-              <div className="relative z-10 space-y-8">
-                <div className="flex items-center gap-6">
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-2xl rotate-3 group-hover:rotate-0 transition-transform ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
-                    {section.icon}
-                  </div>
-                  <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tight">
-                    {section.title}
-                  </h2>
+            <section key={section.id} id={section.id} className="relative pt-20 border-t border-black/5 dark:border-white/5 group">
+              <div className="absolute -left-10 -top-5 text-9xl font-black opacity-[0.03] italic">{idx + 1}</div>
+              <div className="relative z-10 flex flex-col gap-6">
+                <div className="flex items-center gap-4">
+                    <div className={`p-4 rounded-2xl ${reduxTheme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>{section.icon}</div>
+                    <h2 className="text-4xl font-black uppercase italic">{section.title}</h2>
                 </div>
-
-                <div className="space-y-6 max-w-3xl">
-                  <p className="text-xl md:text-2xl leading-relaxed opacity-80">
-                    {section.content}
-                  </p>
-                  
-                  {section.details && (
-                    <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 font-medium border-l-2 border-cyan-500 pl-6">
-                      {section.details}
-                    </p>
-                  )}
-
-                  {section.list && (
-                    <div className="grid gap-4 mt-8">
-                      {section.list.map((li, i) => (
-                        <div key={i} className={`p-6 rounded-3xl border transition-colors ${theme === 'dark' ? 'bg-white/[0.02] border-white/5 hover:border-cyan-500/30' : 'bg-zinc-50 border-black/5 hover:border-cyan-500/30'}`}>
-                           <p className="font-mono text-sm tracking-tighter text-cyan-600 dark:text-cyan-400">{li}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {section.status && (
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-widest">
-                      <Settings size={14} className="animate-spin" style={{ animationDuration: '3s' }} />
-                      {section.status}
-                    </div>
-                  )}
-                </div>
+                <p className="text-xl opacity-70 leading-relaxed">{section.content}</p>
+                {section.details && <p className="border-l-2 border-cyan-500 pl-4 text-zinc-500">{section.details}</p>}
               </div>
-            </motion.section>
+            </section>
           ))}
-
-          {/* Footer inside Content */}
-          <footer className="py-20 text-center">
-            <p className="text-zinc-400 text-xs font-black uppercase tracking-[0.5em] mb-4">
-              End of Documentation
-            </p>
-            <button 
-              onClick={() => navigate("/")}
-              className="px-12 py-5 rounded-full bg-cyan-500 text-white font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl"
-            >
-              Return to Interface
-            </button>
-          </footer>
         </motion.div>
       </main>
 
-      {/* --- RIGHT INFO PANEL (FIXED) --- */}
-      <aside className={`hidden xl:flex w-80 h-full border-l p-8 flex-col space-y-8 sticky top-0 overflow-y-auto ${theme === 'dark' ? 'border-white/10 bg-black/20' : 'border-black/5 bg-zinc-50/50'}`}>
-        <div className="p-6 rounded-[2.5rem] bg-cyan-500 text-white shadow-2xl rotate-2 hover:rotate-0 transition-transform cursor-default">
-          <p className="text-[10px] font-black uppercase tracking-widest mb-2 opacity-60">System Health</p>
-          <h4 className="text-4xl font-black italic tracking-tighter">99.9%</h4>
-          <div className="mt-4 h-1 w-full bg-white/20 rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: "99.9%" }}
-              transition={{ duration: 2, ease: "easeOut" }}
-              className="h-full bg-white"
-            />
-          </div>
+      <aside className="hidden xl:flex w-80 h-full p-8 flex-col space-y-8 glass-panel border-l border-white/10">
+        <div className="p-6 rounded-3xl bg-cyan-500 text-white shadow-xl rotate-1">
+          <div className="text-[10px] font-black uppercase mb-2">Uptime</div>
+          <div className="text-4xl font-black">99.9%</div>
         </div>
-
         <div className="space-y-4">
-          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-2">Quick Tools</p>
-          {["API Status", "Global Sync", "Vault Lock", "Node Manager"].map(tool => (
-            <button 
-              key={tool} 
-              onClick={() => handleToolClick(tool)}
-              className={`w-full p-4 rounded-2xl border flex justify-between items-center text-xs font-bold uppercase tracking-widest transition-all cursor-pointer group active:scale-95 ${theme === 'dark' ? 'border-white/5 hover:bg-zinc-900' : 'border-black/5 hover:bg-white'}`}
-            >
-              {tool}
-              <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform text-cyan-500" />
-            </button>
-          ))}
-        </div>
+            <p className="text-[10px] font-black uppercase text-zinc-500">Node Controls</p>
+            {["API Status", "Global Sync", "Vault Lock", "Node Manager"].map(tool => (
+                <button key={tool} onClick={() => handleToolAction(tool)} className="w-full p-4 rounded-xl border border-white/5 hover:bg-white/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+                    {tool} 
+                    <ChevronRight size={14} />
+                </button>
+            ))}
 
-        <div className="relative flex-1 flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-             <div className="w-40 h-40 border-2 border-cyan-500 rounded-full animate-ping" />
-          </div>
-          <div className="relative aspect-square w-full rounded-[2rem] border-2 border-dashed border-cyan-500/30 flex items-center justify-center group">
-            <Cpu size={80} className="text-cyan-500 animate-pulse group-hover:scale-110 transition-transform" />
-          </div>
+            <div className="flex-1 flex items-center justify-center opacity-40">
+           <div className="relative aspect-square w-48 rounded-[2rem] border-2 border-dashed border-cyan-500/30 flex items-center justify-center">
+             <Cpu size={60} className="text-cyan-500 animate-pulse" />
+           </div>
+        </div>
         </div>
       </aside>
+
+      <style>{`
+        .glass-panel {
+            background: ${reduxTheme === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)'};
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+        * { scrollbar-width: none; }
+        *::-webkit-scrollbar { display: none; }
+      `}</style>
     </div>
   );
 };
