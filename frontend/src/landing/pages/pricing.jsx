@@ -13,6 +13,7 @@ import {
   Globe,
   Star
 } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // Added for routing
 import MeshBackground from "../components/common/mesh";
 import { SpotlightNavbar } from "../components/common/navbar";
 import Footer from "../components/common/landingFooter";
@@ -24,6 +25,7 @@ const CUBIC_BEZIER = [0.16, 1, 0.3, 1];
 const PricingPage = () => {
   const [isYearly, setIsYearly] = useState(false);
   const { scrollYProgress } = useScroll();
+  const navigate = useNavigate(); // Navigation hook
   
   // Parallax values for deep background elements
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -300]);
@@ -36,7 +38,7 @@ const PricingPage = () => {
       description: "Ideal for growing educational institutes.",
       icon: <Rocket className="text-zinc-500" size={24} />,
       features: ["100 Active Users", "Biometric Sync", "Basic Reporting", "99.0% Uptime"],
-      color: "from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900"
+      color: "from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900",
     },
     {
       name: "Enterprise",
@@ -45,7 +47,7 @@ const PricingPage = () => {
       icon: <Building2 className="text-cyan-500" size={24} />,
       features: ["Unlimited Users", "Neural Geo-fencing", "Dedicated Node", "24/7 Support", "White-labeling"],
       highlight: true,
-      color: "from-cyan-500/20 to-blue-500/20"
+      color: "from-cyan-500/20 to-blue-500/20",
     },
     {
       name: "Government",
@@ -53,7 +55,8 @@ const PricingPage = () => {
       description: "High-security sectors and on-premise vaulting.",
       icon: <ShieldCheck className="text-violet-500" size={24} />,
       features: ["Air-gapped Setup", "Zero-Trust Protocol", "Physical Audits", "Data Sovereignty"],
-      color: "from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900"
+      color: "from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900",
+      route: "/register" 
     }
   ];
 
@@ -85,6 +88,7 @@ const PricingPage = () => {
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <motion.button 
+                onClick={() => navigate("/register")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.4, ease: CUBIC_BEZIER }}
@@ -93,6 +97,7 @@ const PricingPage = () => {
                 Start Free Trial
               </motion.button>
               <motion.button 
+                onClick={() => navigate("/register")}
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.4, ease: CUBIC_BEZIER }}
@@ -160,7 +165,6 @@ const PricingPage = () => {
             </h2>
             
             <div className="flex flex-col items-center gap-8">
-              {/* Yearly Toggle */}
               <div className="flex items-center gap-6">
                 <span className={`text-xs font-black uppercase tracking-widest ${!isYearly ? "text-cyan-500" : "text-zinc-400"}`}>Monthly</span>
                 <button 
@@ -223,6 +227,7 @@ const PricingPage = () => {
                 </div>
 
                 <motion.button 
+                  onClick={() => navigate(plan.route)} // Wraps every plan's button to register
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.3, ease: CUBIC_BEZIER }}
@@ -253,6 +258,7 @@ const PricingPage = () => {
            </p>
            
            <motion.button 
+            onClick={() => navigate("/register")} // Wrapped Scale button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             transition={{ duration: 0.5, ease: CUBIC_BEZIER }}
