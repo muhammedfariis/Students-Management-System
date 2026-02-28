@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, useInView } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from "framer-motion";
 import { 
   ShieldCheck, 
   Lock, 
@@ -15,7 +15,10 @@ import {
   FileLock2,
   Globe,
   RefreshCcw,
-  Cpu
+  Cpu,
+  Download,
+  CheckCircle2,
+  Loader2
 } from "lucide-react";
 
 import { SpotlightNavbar } from "../components/common/navbar";
@@ -71,7 +74,7 @@ const PrivacyPage = () => {
         </motion.div>
       </section>
 
-      {/* ── SECTION 2: BIOMETRIC SHIELD (Jelly Card) ── */}
+      {/* ── SECTION 2: BIOMETRIC SHIELD ── */}
       <section className="relative py-40 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div 
@@ -119,7 +122,7 @@ const PrivacyPage = () => {
         </div>
       </section>
 
-      {/* ── SECTION 4: DATA MINIMIZATION (Extreme Parallax) ── */}
+      {/* ── SECTION 4: DATA MINIMIZATION ── */}
       <section className="relative py-60 px-6 overflow-hidden">
         <motion.div style={{ x: layerMidY }} className="absolute top-0 right-0 text-[20vw] font-black text-zinc-100 dark:text-white/[0.02] italic uppercase pointer-events-none whitespace-nowrap">
           Zero_Knowledge_System
@@ -138,21 +141,21 @@ const PrivacyPage = () => {
             </div>
           </div>
           <motion.div style={{ y: layerMidY }} className="bg-black p-10 rounded-[3rem] shadow-2xl">
-             <div className="font-mono text-[10px] space-y-3">
-               <p className="text-cyan-500 uppercase tracking-widest">// SECURE_LOG_DAEMON</p>
-               <p className="text-zinc-500">HANDSHAKE INITIALIZED...</p>
-               <p className="text-emerald-500">ENCRYPTION: AES-256-GCM [ACTIVE]</p>
-               <p className="text-zinc-500">PACKET SENSING: ANONYMIZED</p>
-               <p className="text-zinc-500">METADATA SCRUBBING: COMPLETE</p>
-               <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
-                 <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ repeat: Infinity, duration: 2 }} className="h-full w-1/2 bg-cyan-500" />
-               </div>
-             </div>
+              <div className="font-mono text-[10px] space-y-3">
+                <p className="text-cyan-500 uppercase tracking-widest">// SECURE_LOG_DAEMON</p>
+                <p className="text-zinc-500">HANDSHAKE INITIALIZED...</p>
+                <p className="text-emerald-500">ENCRYPTION: AES-256-GCM [ACTIVE]</p>
+                <p className="text-zinc-500">PACKET SENSING: ANONYMIZED</p>
+                <p className="text-zinc-500">METADATA SCRUBBING: COMPLETE</p>
+                <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
+                  <motion.div animate={{ x: ["-100%", "100%"] }} transition={{ repeat: Infinity, duration: 2 }} className="h-full w-1/2 bg-cyan-500" />
+                </div>
+              </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── SECTION 5: USER RIGHTS MATRIX ── */}
+      {/* ── SECTION 5: USER RIGHTS ── */}
       <section className="py-40 bg-zinc-50 dark:bg-zinc-950">
         <div className="max-w-7xl mx-auto px-6">
            <h3 className="text-2xl font-black italic uppercase tracking-widest mb-20 text-center">Your Universal Rights</h3>
@@ -165,18 +168,23 @@ const PrivacyPage = () => {
         </div>
       </section>
 
-      {/* ── SECTION 6: THE TRANSPARENCY SHIELD ── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cyan-500 dark:bg-cyan-600 opacity-5" />
-        <div className="relative z-10 text-center space-y-12">
-           <ShieldAlert size={120} className="mx-auto text-cyan-500 mb-8" />
-           <h2 className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter">Stay <br /> Protected.</h2>
-           <motion.button 
-             whileHover={{ scale: 1.1, backgroundColor: "#000", color: "#fff" }}
-             className="px-16 py-8 border-2 border-black dark:border-white rounded-full font-black uppercase tracking-[0.4em] text-xs transition-colors"
+      {/* ── SECTION 6: THE CTA SHIELD ── */}
+      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-cyan-500/5 pointer-events-none" />
+        <div className="relative z-10 text-center space-y-16">
+           <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
            >
-             Read Compliance PDF
-           </motion.button>
+             <ShieldAlert size={120} className="mx-auto text-cyan-500 mb-8 animate-pulse" />
+             <h2 className="text-7xl md:text-9xl font-black italic uppercase tracking-tighter leading-none">
+               Stay <br /> Protected.
+             </h2>
+           </motion.div>
+
+           {/* --- THE UPGRADED COMPLIANCE BUTTON --- */}
+           <DownloadButton />
         </div>
       </section>
 
@@ -186,6 +194,89 @@ const PrivacyPage = () => {
 };
 
 // --- SUB-COMPONENTS ---
+
+const DownloadButton = () => {
+  const [status, setStatus] = useState("idle"); // idle | downloading | complete
+
+  const handleDownload = () => {
+    setStatus("downloading");
+    
+    // Simulate a brief delay before the "actual" download begins
+    setTimeout(() => {
+      setStatus("complete");
+      const link = document.createElement('a');
+      link.href = '/pdf/Privacy Manifesto for Attendex v26.0.pdf'; // Path to your file
+      link.download = 'Privacy_Compliance_Protocol.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Reset after 3 seconds
+      setTimeout(() => setStatus("idle"), 3000);
+    }, 1500);
+  };
+
+  return (
+    <motion.button
+      onClick={handleDownload}
+      disabled={status !== "idle"}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="relative group flex items-center justify-center gap-6 px-10 py-6 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-full transition-all duration-500 shadow-[0_0_0_0_rgba(6,182,212,0)] hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] border border-white/10 dark:border-black/10"
+    >
+      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      
+      <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          {status === "idle" && (
+            <motion.div
+              key="idle"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex items-center gap-4"
+            >
+              <Download size={20} className="group-hover:animate-bounce" />
+              <span className="font-black uppercase tracking-[0.3em] text-xs">Download Compliance Protocol</span>
+            </motion.div>
+          )}
+
+          {status === "downloading" && (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-4 text-cyan-500"
+            >
+              <Loader2 size={20} className="animate-spin" />
+              <span className="font-black uppercase tracking-[0.3em] text-xs">Encrypting Files...</span>
+            </motion.div>
+          )}
+
+          {status === "complete" && (
+            <motion.div
+              key="complete"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-4 text-emerald-500"
+            >
+              <CheckCircle2 size={20} />
+              <span className="font-black uppercase tracking-[0.3em] text-xs">Protocol Acquired</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Decorative inner glow */}
+      <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"
+        />
+      </div>
+    </motion.button>
+  );
+};
 
 const JellyCard = ({ icon, title, description, index }) => {
   const ref = useRef(null);
