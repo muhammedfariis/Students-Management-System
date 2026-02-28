@@ -20,7 +20,7 @@ const AppRouter = () => {
         <Route  path='/features' element={<FeaturesPage/>}/>
         <Route  path='/contact' element={<ContactPage/>}/>
         <Route  path='/privacy' element={<PrivacyPage/>}/>
-        <Route  path='/privacy' element={<ArchitecturePage/>}/>
+        <Route  path='/architecture' element={<ArchitecturePage/>}/>
 
 
 
