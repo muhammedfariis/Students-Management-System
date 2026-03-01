@@ -1,45 +1,49 @@
 import mongoose from "mongoose";
 
-const registerSchema = new mongoose.Schema({
+const registerSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+    },
 
-  username : {
-    type : String,
-    required : true
+    phone: {
+      type: String,
+      required: true,
+    },
+
+    age: {
+      type: Number,
+      required: true,
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/^[a-zA-Z0-9.%+_-]+@gmail\.com$/, "only gmail allowed"],
+    },
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      maxlength: 15,
+    },
+
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
+
+      ref: "Role",
+
+      required: true,
+    },
   },
+  { timestamps: true },
+);
 
-  phone : {
-    type : Number,
-    required : true,
-  
-  },
+export default mongoose.model(
+  "authentications",
 
-  age : {
-    type : Number,
-    required : true,
-
-
-  },
-
-  email : {
-    type : String,
-    required : true ,
-    unique : true,
-    match : [/^[a-zA-Z0-9.%+_-]+@gmail\.com$/ , "only unique gmail"]
-  },
-  
-  password : {
-   type : String,
-   required : true,
-   min : 8,
-   max : 15
-  },
-  role :{
-    type : String,
-  }
-
-},{timestamps : true})
-
-
-const register = mongoose.model("authentications" , registerSchema)
-
-export default register
+  registerSchema,
+);

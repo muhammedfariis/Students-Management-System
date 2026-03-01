@@ -1,28 +1,45 @@
 import Register from "../models/register.js";
+import Role from "../models/Role.js";
+
 import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
 
-// creating the registration
-
 export const register = async (req, res) => {
   try {
-    const { username, phone, age, email, password, role } = req.body;
+    const { username, phone, age, email, password } = req.body;
 
-    if (!username || !phone || !age || !email || !password || !role) {
-      return res.status(400).json({ messege: "input fields must be filled!" });
+    // already exist ?
+
+    const exist = await Register.findOne();
+
+    if (exist) {
+      return res
+        .status(403)
+
+        .json({
+          message: "Register Closed",
+        });
     }
 
-    const cheking = await Register.findOne({ email });
+    // create superadmin role automatically
 
-    if (cheking) {
-      return res.status(400).json({ messege: "user already exists", cheking });
+    let role = await Role.findOne({
+      name: "SuperAdmin",
+    });
+
+    if (!role) {
+      role = await Role.create({
+        name: "SuperAdmin",
+
+        permissions: ["dashboard", "create-user", "create-role", "landing"],
+      });
     }
 
-    // hashig
+    const hashed = await bcrypt.hash(
+      password,
 
-    const hashed = await bcrypt.hash(password, 10);
-
-    // creating a register
+      10,
+    );
 
     const signup = await Register.create({
       username,
@@ -30,90 +47,93 @@ export const register = async (req, res) => {
       age,
       email,
       password: hashed,
-      role,
+
+      role: role._id,
     });
 
-    await signup.save();
+    const token = JWT.sign(
+      {
+        user: signup._id,
 
-    // creating jwt tokens
+        role: role.name,
+      },
 
-    const tokens = JWT.sign(
-      { user: signup._id, role: signup.role.toLowerCase() },
       process.env.JWT_SECRET,
-      { expiresIn: "50d" }
+
+      {
+        expiresIn: "30d",
+      },
     );
 
-    return res.status(201).json({
-      tokens,
-      user: {
-        user: signup._id,
-        username: signup.username,
-        phone: signup.phone,
-        age: signup.age,
-        email: signup.email,
-        password: signup.password,
-        role: signup.role,
-      },
+    res.status(201).json({
+      token,
+      user: signup,
     });
   } catch (err) {
-    return res.status(500).json({ error: "internal server error", err });
+    res.status(500).json(err);
   }
 };
-
-// login creations
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
-    if (!email || !password || !role) {
+    const { email, password } = req.body;
+
+    const user = await Register.findOne({
+      email,
+    }).populate("role");
+
+    if (!user) {
       return res
-        .status(400)
-        .json({ messege: "email and password must include" });
+        .status(404)
+
+        .json({
+          message: "User not found",
+        });
     }
 
-    const finding = await Register.findOne({ email });
-    if (!finding) {
-      return res.status(400).json({ messege: "user not found" });
-    }
+    const compare = await bcrypt.compare(
+      password,
 
-    //    comparing the email and password
-
-    const comparing = await bcrypt.compare(password, finding.password);
-    if (!comparing) {
-      return res.status(401).json({ messege: "password not compared" });
-    }
-
-    const tokens = JWT.sign(
-      { user: finding._id, role: finding.role.toLowerCase() },
-      process.env.JWT_SECRET,
-      { expiresIn: "12h" }
+      user.password,
     );
 
-    return res.status(200).json({
-      tokens,
+    if (!compare) {
+      return res
+        .status(401)
+
+        .json({
+          message: "wrong password",
+        });
+    }
+
+    const token = JWT.sign(
+      {
+        user: user._id,
+
+        role: user.role.name,
+      },
+
+      process.env.JWT_SECRET,
+
+      {
+        expiresIn: "12h",
+      },
+    );
+
+    res.json({
+      token,
+
       user: {
-        userId: finding._id,
-        email: finding.email,
-        role: finding.role,
+        id: user._id,
+        username: user.username,
+        email: user.email,
+
+        role: user.role.name,
+
+        permissions: user.role.permissions,
       },
     });
   } catch (err) {
-    return res.status(500).json({ error: "internal server error", err });
-  }
-};
-
-// geting all the users
-
-export const getauth = async (req, res) => {
-  try {
-    const readAllAuth = await Register.find();
-    if (!readAllAuth) {
-      return res.status(400).json({ messege: "readings have some problems" });
-    }
-    return res
-      .status(200)
-      .json({ messege: "all authers succeed", readAllAuth });
-  } catch (err) {
-    return res.status(500).json({ error: "internal server error", err });
+    res.status(500).json(err);
   }
 };

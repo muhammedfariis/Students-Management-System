@@ -1,157 +1,256 @@
-import Users from "../models/user.js"
-import jwt from "jsonwebtoken"
-import bcrypt from 'bcrypt'
+import Users from "../models/auth.js";
+import Role from "../models/Role.js";
 
-// creating the users 
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-export const creatUsers = async(req , res)=>{
-  try{
-    const {
-       email ,
-       password,
-       firstname,
-       lastname,
-       role 
-    } = req.body
+// ========================================
+// CREATE USER (ADMIN + SUPERADMIN)
+// ========================================
 
-    if(!email || !password || !firstname || !role){
-     return res.status(400).json({messege : 'input fields must required'})
+export const createUser = async (req, res) => {
+  try {
+    const { email, password, firstname, lastname, roleId } = req.body;
+
+    // ================= RBAC =================
+
+    if (req.user.role !== "Admin" && req.user.role !== "SuperAdmin") {
+      return res.status(403).json({
+        message: "Access denied",
+      });
     }
 
-    const exist = await Users.findOne({email})
-    if(exist){
-        return res.status(400).json({messege : 'user already exists'})
+    // ================= VALIDATION =================
+
+    if (!email || !password || !firstname || !roleId) {
+      return res.status(400).json({
+        message: "Required fields missing",
+      });
     }
 
-    const hash = await bcrypt.hash(password,10)
+    // ================= EXIST CHECK =================
 
-    const creat = await Users.create({
+    const exist = await Users.findOne({ email });
+
+    if (exist) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
+
+    // ================= ROLE VERIFY =================
+
+    const role = await Role.findById(roleId);
+
+    if (!role) {
+      return res.status(404).json({
+        message: "Role not found",
+      });
+    }
+
+    // ADMIN CANNOT CREATE ADMIN
+
+    if (req.user.role === "Admin" && role.name === "Admin") {
+      return res.status(403).json({
+        message: "Admin cannot create Admin",
+      });
+    }
+
+    // ================= PASSWORD HASH =================
+
+    const hash = await bcrypt.hash(password, 10);
+
+    // ================= CREATE =================
+
+    const user = await Users.create({
       email,
-      password : hash,
+      password: hash,
       firstname,
       lastname,
-      role
+      role: role._id,
+    });
 
-    })
+    // ================= TOKEN =================
 
-    await creat.save()
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: role.name,
+      },
 
-    const tokens = jwt.sign(
-        {userId : creat._id , role : creat.role},
-        process.env.JWT_SECRET ,
-        {expiresIn : "12h"}
+      process.env.JWT_SECRET,
 
-    )
+      {
+        expiresIn: "12h",
+      },
+    );
 
     return res.status(201).json({
-      messege : "user creation success",
-      users : creat._id ,
-      tokens,
-      details : {
-          email : creat.email,
-          firstname : creat.firstname,
-          lastname : creat.lastname,
-          role : creat.role
-      }
-    })
+      message: "User Created Successfully",
 
-  }catch(err){
-   return res.status(500).json({messege : 'internal server error'})
+      token,
+
+      user: {
+        id: user._id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        role: role.name,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+
+      error: err.message,
+    });
   }
+};
 
+// ========================================
+// GET ALL USERS
+// ========================================
 
-}
+export const getUsers = async (req, res) => {
+  try {
+    const users = await Users.find()
 
-// all users getting without id 
+      .populate("role", "name permissions");
 
-export const getUsers = async (req , res)=>{
-  try{
-    const getting = await Users.find()
-    if(getting.length === 0){
-      return res.status(400).json({messege  : 'users not found'})
+    if (!users.length) {
+      return res.status(404).json({
+        message: "Users not found",
+      });
     }
+
     return res.status(200).json({
-      messege : "users found this is all users" ,
-       user : getting
-      })
+      message: "Users fetched",
 
-  }catch(err){
-    return res.status(500).json({error : "internal server error",err})
+      users,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
   }
-}
+};
 
-// gettiing users with id 
+// ========================================
+// GET USER BY ID
+// ========================================
 
+export const getUserById = async (req, res) => {
+  try {
+    const user = await Users.findById(req.params.id)
 
-export const getUsersById = async (req , res)=>{
-  try{
+      .populate("role", "name permissions");
 
-    const getusers = await Users.findById(req.params.id)
-    if(!getusers){
-      return res.status(400).json({messege : "users not found by id"})
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
     }
-     return res.status(200).json({
-      message: "User found by id",
-      user: getusers
-    })
 
-  }catch(err){
-    return res.status(500).json({error : 'internal server error' , err})
+    return res.status(200).json({
+      message: "User found",
+
+      user,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
   }
+};
 
-} 
+// ========================================
+// UPDATE USER
+// ========================================
 
+export const updateUser = async (req, res) => {
+  try {
+    const updates = { ...req.body };
 
-// updating by users id
+    // PASSWORD OPTIONAL
 
-export const updateUsers = async (req , res)=>{
-   try{
+    if (req.body.password) {
+      updates.password = await bcrypt.hash(
+        req.body.password,
 
-    const {
-      email,
-      password ,
-      firstname,
-      lastname,
-    } = req.body
-
-    const hash = await bcrypt.hash(password , 10)
-
-    const updatUsers = await Users.findByIdAndUpdate(
-    req.params.id,
-    {email , password : hash , firstname , lastname},
-    {new : true}
-    )
-
-    if(!updatUsers){
-      return res.status(401).json({messege : "users not updated " , error : 'updations have some mistakes'})
+        10,
+      );
     }
-    return res.status(200).json({messege : "user updation with unique id was succeeded" , updatUsers})
 
-   }catch(err){
-   return res.status(500).json({error : "internal server error" , err})
-   }
-  
-}
+    // ROLE UPDATE IF PROVIDED
 
-// delete users 
+    if (req.body.roleId) {
+      const role = await Role.findById(req.body.roleId);
 
-export const remove = async (req , res)=>{
-   try{
+      if (!role) {
+        return res.status(404).json({
+          message: "Role not found",
+        });
+      }
 
-    const deleted = await Users.findByIdAndDelete(
+      updates.role = role._id;
+    }
+
+    const updatedUser = await Users.findByIdAndUpdate(
       req.params.id,
-      req.body
+
+      updates,
+
+      { new: true },
     )
-   if(!deleted){
-   return res.status(401).json({messege : "user not deleted"})
-   }
-   return res.status(200).json({messege : "deletation completed"  ,deleted})
 
-   }catch(err){
-    return res.status(500).json({error : "internal server error" , err})
-   }
+      .populate("role", "name permissions");
 
-}
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not updated",
+      });
+    }
 
+    return res.status(200).json({
+      message: "User Updated",
 
+      updatedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
 
+// ========================================
+// DELETE USER (SUPERADMIN ONLY)
+// ========================================
+
+export const deleteUser = async (req, res) => {
+  try {
+    if (req.user.role !== "SuperAdmin") {
+      return res.status(403).json({
+        message: "Only SuperAdmin can delete users",
+      });
+    }
+
+    const deleted = await Users.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "User Deleted",
+
+      deleted,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
