@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { animate } from "framer-motion";
 import { cn } from "../../../lib/utils/utils"; 
 import { Link, useLocation } from "react-router-dom"; // Added useLocation
-import Switch from "../ui/toggle";
+import Switch from "../../../components/toggle";
 import CustomDropdown from "./dropdown";
 
 interface NavItem {

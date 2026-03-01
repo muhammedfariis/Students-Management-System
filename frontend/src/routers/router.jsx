@@ -12,7 +12,9 @@ import SystemLogicPage from '../landing/pages/systemLogic';
 import DocumentationPage from '../landing/pages/documentationpage';
 import RegisterPage from '../authentication/register';
 import LoginPage from '../authentication/login';
-import Sidebar from '../Admins/components/common/users';
+import SidebarAdmin from '../Admins/components/common/slidebarAdmin';
+import SettingsPage from '../Admins/pages/settings';
+import AddUserPage from '../Admins/pages/addUsers';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -29,7 +31,12 @@ const AppRouter = () => {
         <Route path="/docs"  element={<DocumentationPage/>}/>
         <Route path="/register"  element={<RegisterPage/>}/>
         <Route path="/login"  element={<LoginPage/>}/>
-        <Route path="/sidebar"  element={<Sidebar/>}/>
+        <Route path="/sidebar"  element={<SidebarAdmin/>}/>
+        <Route path="/settings"  element={<SettingsPage/>}/>
+        <Route path="/users/add"  element={<AddUserPage/>}/>
+
+
+        
 
 
         

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
-import Switch from '../landing/components/ui/toggle';
+import Switch from '../components/toggle';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
