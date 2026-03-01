@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux"; // Sync with your Switch
 import MeshBackground from "../components/common/mesh";
-import Switch from "../components/ui/toggle";
+import Switch from "../../components/toggle";
 import { toast, Toaster } from "react-hot-toast";
 
 // --- Massive Documentation Content (20+ Sections) ---

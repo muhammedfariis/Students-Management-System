@@ -15,6 +15,7 @@ import LoginPage from '../authentication/login';
 import SidebarAdmin from '../Admins/components/common/slidebarAdmin';
 import SettingsPage from '../Admins/pages/settings';
 import AddUserPage from '../Admins/pages/addUsers';
+import AdminLayout from '../layouts/adminlayouts';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -34,6 +35,8 @@ const AppRouter = () => {
         <Route path="/sidebar"  element={<SidebarAdmin/>}/>
         <Route path="/settings"  element={<SettingsPage/>}/>
         <Route path="/users/add"  element={<AddUserPage/>}/>
+        <Route path="/admin"  element={<AdminLayout/>}/>
+
 
 
         
