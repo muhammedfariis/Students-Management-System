@@ -1,4 +1,4 @@
-    import Students from "../models/students.js";
+    import Students from "../../models/students.js";
     import bcrypt from "bcrypt"
     import jwt from "jsonwebtoken"
 

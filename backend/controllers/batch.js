@@ -1,4 +1,4 @@
-import Batch from "../../batch-management-3/models/batch.js";
+import Batch from "../models/batch.js";
 import StudentID from "../../students-management-4/models/students.js"
 
 // creating the batch id and compare it that student id 

@@ -5,10 +5,10 @@ import {
   getUsersById,
   updateUsers,
   remove
-} from '../controllers/userLogics.js'
+} from '../user-managements-2/controllers/userLogics.js'
 
-import auth from "../../authentications-1/middlewares/authmiddle.js"
-import roles from "../../authentications-1/middlewares/userRoles.js"
+import auth from "../middlewares/authmiddle.js"
+import roles from "../middlewares/userRoles.js"
 
 const routers = express.Router()
 

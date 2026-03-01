@@ -16,8 +16,7 @@ const registerSchema = new mongoose.Schema({
   age : {
     type : Number,
     required : true,
-    min  : 1,
-    max : 21
+
 
   },
 
@@ -36,7 +35,6 @@ const registerSchema = new mongoose.Schema({
   },
   role :{
     type : String,
-    required : true
   }
 
 },{timestamps : true})

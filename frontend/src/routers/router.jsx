@@ -11,6 +11,7 @@ import ArchitecturePage from '../landing/pages/architecture';
 import SystemLogicPage from '../landing/pages/systemLogic';
 import DocumentationPage from '../landing/pages/documentationpage';
 import RegisterPage from '../authentication/register';
+import LoginPage from '../authentication/login';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -26,6 +27,9 @@ const AppRouter = () => {
         <Route path="/logics"  element={<SystemLogicPage/>}/>
         <Route path="/docs"  element={<DocumentationPage/>}/>
         <Route path="/register"  element={<RegisterPage/>}/>
+        <Route path="/login"  element={<LoginPage/>}/>
+
+        
 
 
          

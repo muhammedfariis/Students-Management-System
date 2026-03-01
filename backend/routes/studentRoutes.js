@@ -3,7 +3,7 @@ import {
   creatStudent,
   getAllStudents,
   getByID
-} from "../controllers/student.js"
+} from "../students-management-4/controllers/student.js"
 import auth from "../../authentications-1/middlewares/authmiddle.js"
 import roles from "../../authentications-1/middlewares/userRoles.js"
 

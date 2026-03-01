@@ -4,7 +4,7 @@ import {
   register,
   login,
   getauth
-} from "../controllers/auth.js"
+} from "../authentications-1/controllers/auth.js"
 
 
 const router = express.Router()
