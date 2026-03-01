@@ -1,33 +1,39 @@
-
 import jwt from "jsonwebtoken";
 
 const auth = (req, res, next) => {
-  const headers = req.headers.authorization;
-
-  if (!headers) {
-    return res.status(401).json({ message: "Unauthorized - No Token Provided" });
-  }
-
-  const token = headers.split(" ")[1];
-
-  if (!token) {
-    return res.status(400).json({ message: "Token not available" });
-  }
-
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const authHeader = req.headers.authorization;
 
-    req.user = payload.userId;
-    req.userRole = payload.role;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Unauthorized - Token Missing",
+      });
+    }
 
-    console.log("Auth User:", req.user);
-    console.log("Role:", req.userRole);
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized - Token not found",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded.userId;
+    req.userRole = decoded.role;
+
+    console.log("✅ Authenticated User:", req.user);
+    console.log("✅ Role:", req.userRole);
 
     next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid Token", err });
+  } catch (error) {
+    console.error("JWT Error:", error.message);
+
+    return res.status(401).json({
+      message: "Invalid or Expired Token",
+    });
   }
 };
 
 export default auth;
-

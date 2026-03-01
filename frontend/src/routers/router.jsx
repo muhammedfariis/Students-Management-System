@@ -12,6 +12,7 @@ import SystemLogicPage from '../landing/pages/systemLogic';
 import DocumentationPage from '../landing/pages/documentationpage';
 import RegisterPage from '../authentication/register';
 import LoginPage from '../authentication/login';
+import Sidebar from '../Admins/components/common/users';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -28,6 +29,8 @@ const AppRouter = () => {
         <Route path="/docs"  element={<DocumentationPage/>}/>
         <Route path="/register"  element={<RegisterPage/>}/>
         <Route path="/login"  element={<LoginPage/>}/>
+        <Route path="/sidebar"  element={<Sidebar/>}/>
+
 
         
 
