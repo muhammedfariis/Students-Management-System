@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Sidebar from "../Admins/components/common/slidebarAdmin"; // Path to your sidebar
 import { useSelector } from "react-redux";
 import AddUserPage from "../Admins/pages/addUsers";
+import CreateEventPage from "../Admins/pages/events";
 
 const AdminLayout = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
@@ -18,7 +19,8 @@ const AdminLayout = () => {
 
       {/* 2. MAIN VIEWPORT */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-         <AddUserPage/>
+         <CreateEventPage/>
+
 
         {/* 3. SCROLLABLE CONTENT AREA */}
         <div className={`flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar`}>

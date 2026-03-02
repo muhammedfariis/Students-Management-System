@@ -16,6 +16,8 @@ import SidebarAdmin from '../Admins/components/common/slidebarAdmin';
 import SettingsPage from '../Admins/pages/settings';
 import AddUserPage from '../Admins/pages/addUsers';
 import AdminLayout from '../layouts/adminlayouts';
+import CreateEventPage from '../Admins/pages/events';
+import ActionPage from '../Admins/pages/action';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -36,7 +38,11 @@ const AppRouter = () => {
         <Route path="/settings"  element={<SettingsPage/>}/>
         <Route path="/users/add"  element={<AddUserPage/>}/>
         <Route path="/admin"  element={<AdminLayout/>}/>
+        <Route path="/events"  element={<CreateEventPage/>}/>
+        <Route path="/action"  element={<ActionPage/>}/>
 
+
+        
 
 
         
