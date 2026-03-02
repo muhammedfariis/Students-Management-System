@@ -18,6 +18,7 @@ import AddUserPage from '../Admins/pages/addUsers';
 import AdminLayout from '../layouts/adminlayouts';
 import CreateEventPage from '../Admins/pages/events';
 import ActionPage from '../Admins/pages/action';
+import StudentList from '../Admins/pages/studentsList';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -40,6 +41,9 @@ const AppRouter = () => {
         <Route path="/admin"  element={<AdminLayout/>}/>
         <Route path="/events"  element={<CreateEventPage/>}/>
         <Route path="/action"  element={<ActionPage/>}/>
+        <Route path="/studentlist"  element={<StudentList/>}/>
+
+        
 
 
         
