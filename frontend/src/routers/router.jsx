@@ -45,6 +45,9 @@ const AppRouter = () => {
         <Route path="/action"  element={<ActionPage/>}/>
         <Route path="/studentlist"  element={<StudentList/>}/>
         <Route path="/userslist"  element={<UserList/>}/>
+        <Route path="/attendanceAdmin"  element={<AttendancePage/>}/>
+
+        
 
 
         
