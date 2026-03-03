@@ -15,7 +15,9 @@ const AttendancePage = () => {
     { id: '1', name: 'John Doe', status: 'present' },
     { id: '2', name: 'Jane Smith', status: 'present' },
     { id: '3', name: 'Alex Johnson', status: 'present' },
-    { id: '4', name: 'Sarah Williams', status: 'present' }
+    { id: '4', name: 'Sarah Williams', status: 'present' },
+    { id: '5', name: 'Michael Scott', status: 'present' },
+    { id: '6', name: 'Pam Beesly', status: 'present' }
   ]);
 
   const batches = ["Batch A - Morning", "Batch B - Evening", "Batch C - Weekend"];
@@ -45,7 +47,7 @@ const AttendancePage = () => {
       darkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'
     }`}>
       
-      {/* BACKGROUND ORBS - Z-INDEX 0 */}
+      {/* BACKGROUND ORBS */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className={`absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[120px] opacity-30 animate-pulse ${darkMode ? 'bg-indigo-600' : 'bg-indigo-300'}`} />
         <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-20 ${darkMode ? 'bg-purple-600' : 'bg-purple-300'}`} />
@@ -84,23 +86,24 @@ const AttendancePage = () => {
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE: 3D PANEL - Z-INDEX 20 */}
+        {/* RIGHT SIDE: 3D PANEL FIXED OVERFLOW */}
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={() => { x.set(0); y.set(0); }}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className={`relative z-20 group p-8 rounded-[2.5rem] border transition-all duration-500 ${
+          className={`relative z-20 group p-8 w-full max-h-[85vh] flex flex-col rounded-[2.5rem] border transition-all duration-500 ${
             darkMode 
               ? 'bg-white/[0.03] border-white/10 backdrop-blur-xl shadow-2xl' 
               : 'bg-white border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)]'
           }`}
         >
-          <div className="mb-6 relative z-30" style={{ transform: "translateZ(50px)" }}>
+          <div className="mb-6 relative z-30 shrink-0" style={{ transform: "translateZ(50px)" }}>
             <h3 className="text-2xl font-black tracking-tight">Mark Attendance</h3>
             <p className="text-sm opacity-50">Select batch and update status.</p>
           </div>
 
-          <div className="space-y-5 relative z-30" style={{ transform: "translateZ(30px)" }}>
+          {/* This container handles the overall layout scroll if needed */}
+          <div className="flex-1 overflow-y-auto pr-2 space-y-5 custom-scrollbar relative z-30" style={{ transform: "translateZ(30px)" }}>
             
             {/* BATCH DATALIST */}
             <div className="flex flex-col gap-2 relative">
@@ -120,13 +123,13 @@ const AttendancePage = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 10 }} exit={{ opacity: 0, y: -10 }}
                     className={`absolute top-full left-0 right-0 z-[100] mt-2 p-2 rounded-2xl border backdrop-blur-3xl shadow-2xl ${
-                      darkMode ? 'bg-slate-900 border-white/20' : 'bg-white border-slate-200'
+                      darkMode ? 'bg-slate-900 border-white/20' : 'bg-white border-slate-200 text-slate-900'
                     }`}
                   >
                     {batches.map((b) => (
                       <div key={b} onClick={() => { setFormData({...formData, Batch: b}); setIsBatchOpen(false); }}
                         className={`px-4 py-3 rounded-xl text-xs font-black uppercase cursor-pointer transition-all mb-1 ${
-                          formData.Batch === b ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : darkMode ? 'text-white hover:bg-white/10' : 'text-slate-700 hover:bg-indigo-50'
+                          formData.Batch === b ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' : darkMode ? 'text-white hover:bg-white/10' : 'hover:bg-indigo-50'
                         }`}
                       >
                         {b}
@@ -175,14 +178,14 @@ const AttendancePage = () => {
                         {openStatusId === student.id && (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                            className={`absolute right-0 top-full mt-2 z-[110] w-48 p-2 rounded-2xl border shadow-2xl backdrop-blur-3xl ${
-                              darkMode ? 'bg-slate-800 border-white/20' : 'bg-white border-slate-200'
+                            className={`absolute right-0 bottom-full mb-2 z-[110] w-48 p-2 rounded-2xl border shadow-2xl backdrop-blur-3xl ${
+                              darkMode ? 'bg-slate-800 border-white/20 text-white' : 'bg-white border-slate-200 text-slate-900'
                             }`}
                           >
                             {statusOptions.map((opt) => (
                               <div key={opt} onClick={() => handleStatusChange(student.id, opt)}
                                 className={`px-3 py-2.5 rounded-xl text-[10px] font-black uppercase cursor-pointer mb-1 transition-all ${
-                                  student.status === opt ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' : darkMode ? 'text-white hover:bg-white/10' : 'text-slate-700 hover:bg-slate-100'
+                                  student.status === opt ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' : 'hover:bg-slate-100'
                                 }`}
                               >
                                 {opt}
@@ -196,22 +199,30 @@ const AttendancePage = () => {
                 ))}
               </div>
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(79, 70, 229, 0.4)" }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-5 mt-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-all cursor-pointer relative z-50"
-              style={{ transform: "translateZ(60px)", backfaceVisibility: "hidden" }}
-            >
-              <Icon icon="solar:check-read-bold" width="20" />
-              Initialize Attendance
-            </motion.button>
           </div>
 
-          {/* GLOW EFFECT - Z-INDEX 0 */}
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(79, 70, 229, 0.4)" }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full shrink-0 py-5 mt-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-all cursor-pointer relative z-50"
+            style={{ transform: "translateZ(60px)", backfaceVisibility: "hidden" }}
+          >
+            <Icon icon="solar:check-read-bold" width="20" />
+            Initialize Attendance
+          </motion.button>
+
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-0 group-hover:opacity-20 transition duration-1000 z-0"></div>
         </motion.div>
       </div>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+          background: ${darkMode ? '#334155' : '#cbd5e1'}; 
+          border-radius: 10px; 
+        }
+      `}</style>
     </div>
   );
 };
