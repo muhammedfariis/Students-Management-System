@@ -21,6 +21,7 @@ import ActionPage from '../Admins/pages/action';
 import StudentList from '../Admins/pages/studentsList';
 import UserList from '../Admins/pages/usersList';
 import AttendancePage from '../Admins/pages/attandance';
+import Dashboard from '../Admins/pages/dashboard';
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -46,6 +47,8 @@ const AppRouter = () => {
         <Route path="/studentlist"  element={<StudentList/>}/>
         <Route path="/userslist"  element={<UserList/>}/>
         <Route path="/attendanceAdmin"  element={<AttendancePage/>}/>
+        <Route path="/dashboard"  element={<Dashboard/>}/>
+
 
         
 
