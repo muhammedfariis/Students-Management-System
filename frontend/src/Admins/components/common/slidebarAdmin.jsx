@@ -56,20 +56,17 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: 'solar:widget-5-bold-duotone' },
-    { name: 'Attendance', path: "/attendanceAdmin", icon: 'solar:user-check-rounded-bold-duotone' },
-    { name: 'Student List', path: '/studentlist', icon: 'solar:notebook-bookmark-bold-duotone' },
-    { name: 'Users List', path: '/userslist', icon: 'solar:users-group-rounded-bold-duotone' },
-    { name: 'Add User', path: '/users/add', icon: 'solar:user-plus-bold-duotone' },
-    { name: 'Events', path: '/events', icon: 'solar:calendar-minimalistic-bold-duotone' },
-    // ACTION SECTION
-    { name: 'Action', path: '/action', icon: 'solar:danger-bold-duotone' },
-    { name: 'Settings', path: '/settings', icon: 'solar:settings-bold-duotone' },
-  ];
-
+    { name: 'Dashboard', path: "/admin/dashboard", icon: 'solar:widget-5-bold-duotone' },
+    { name: 'Attendance', path: "/admin/attendanceAdmin", icon: 'solar:user-check-rounded-bold-duotone' },
+    { name: 'Student List', path: '/admin/studentlist', icon: 'solar:notebook-bookmark-bold-duotone' },
+    { name: 'Users List', path: '/admin/userslist', icon: 'solar:users-group-rounded-bold-duotone' },
+    { name: 'Add User', path: '/admin/users/add', icon: 'solar:user-plus-bold-duotone' },
+    { name: 'Events', path: '/admin/events', icon: 'solar:calendar-minimalistic-bold-duotone' },
+    { name: 'Action', path: '/admin/action', icon: 'solar:danger-bold-duotone' },
+    { name: 'Settings', path: '/admin/settings', icon: 'solar:settings-bold-duotone' },
+];
   return (
     <>
-      {/* CSS to hide scrollbar globally for this component */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar { display: none; }
