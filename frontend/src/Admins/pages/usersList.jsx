@@ -78,10 +78,10 @@ const UserManagementList = () => {
         <div className="text-center mb-10">
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 text-[10px] font-bold tracking-widest uppercase mb-4">
-              Infrastructure Control
+              User Management
             </div>
             <h1 className="text-5xl font-black tracking-tighter leading-tight mb-6">
-              User <span className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Hierarchy.</span>
+              User <span className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Records.</span>
             </h1>
           </motion.div>
 
