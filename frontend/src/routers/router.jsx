@@ -20,6 +20,7 @@ import CreateEventPage from '../Admins/pages/events';
 import ActionPage from '../Admins/pages/action';
 import StudentList from '../Admins/pages/studentsList';
 import UserList from '../Admins/pages/usersList';
+import AttendancePage from '../Admins/pages/attandance';
 const AppRouter = () => {
   return (
     <BrowserRouter>
