@@ -57,7 +57,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: 'solar:widget-5-bold-duotone' },
-    { name: 'Attendance', path: '', icon: 'solar:user-check-rounded-bold-duotone' },
+    { name: 'Attendance', path: "/attendanceAdmin", icon: 'solar:user-check-rounded-bold-duotone' },
     { name: 'Student List', path: '/studentlist', icon: 'solar:notebook-bookmark-bold-duotone' },
     { name: 'Users List', path: '/userslist', icon: 'solar:users-group-rounded-bold-duotone' },
     { name: 'Add User', path: '/users/add', icon: 'solar:user-plus-bold-duotone' },
