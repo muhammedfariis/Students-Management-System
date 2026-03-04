@@ -91,21 +91,9 @@ const RegisterPage = () => {
                   }`} />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Phone</label>
-                <input type="number" placeholder="Phone" required 
-                  className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
-                    darkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'
-                  }`} />
-              </div>
+             
 
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Age</label>
-                <input type="number" min="1" max="21" placeholder="Age" required 
-                  className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
-                    darkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'
-                  }`} />
-              </div>
+            
 
               <div className="col-span-2 flex flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Gmail</label>
@@ -115,7 +103,7 @@ const RegisterPage = () => {
                   }`} />
               </div>
 
-              <div className="flex flex-col gap-1">
+              <div className="col-span-2 flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Password</label>
                 <input type="password" placeholder="Password" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
@@ -123,16 +111,7 @@ const RegisterPage = () => {
                   }`} />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Role</label>
-                <input list="roles" placeholder="Role" required 
-                  className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
-                    darkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'
-                  }`} />
-                <datalist id="roles">
-                  <option value="Administrator" /><option value="Instructor" /><option value="Standard User" />
-                </datalist>
-              </div>
+            
 
               <motion.button
                 type="submit"

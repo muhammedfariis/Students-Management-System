@@ -1,16 +1,16 @@
 import Register from "../models/register.js";
-import Role from "../models/Role.js";
+import Role from "../models/roles.js";
 
 import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { username, phone, age, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     // already exist ?
 
-    const exist = await Register.findOne();
+    const exist = await Register.findOne(email);
 
     if (exist) {
       return res
@@ -43,8 +43,6 @@ export const register = async (req, res) => {
 
     const signup = await Register.create({
       username,
-      phone,
-      age,
       email,
       password: hashed,
 

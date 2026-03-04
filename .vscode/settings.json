@@ -3,6 +3,7 @@
  "tailwindCSS.lint.cssConflict": "warning",
  "tailwindCSS.lint.invalidApply": "warning",
  "tailwindCSS.lint.invalidConfigPath": "warning",
- "tailwindCSS.validate": false
+"tailwindCSS.validate": false,
+"dotenv.enableAutocloaking": true
 
 }

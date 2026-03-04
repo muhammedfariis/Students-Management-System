@@ -7,16 +7,6 @@ const registerSchema = new mongoose.Schema(
       required: true,
     },
 
-    phone: {
-      type: String,
-      required: true,
-    },
-
-    age: {
-      type: Number,
-      required: true,
-    },
-
     email: {
       type: String,
       required: true,
@@ -42,8 +32,5 @@ const registerSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model(
-  "authentications",
-
-  registerSchema,
-);
+ const Register = mongoose.model("authentications",registerSchema,);
+ export default Register
