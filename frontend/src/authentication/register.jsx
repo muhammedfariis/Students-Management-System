@@ -5,21 +5,43 @@ import toast, { Toaster } from 'react-hot-toast';
 import Switch from '../components/toggle';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-
+import API from '../Api/auth/API'
 const RegisterPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
   const [loading, setLoading] = useState(false);
+  const [form , setForm] = useState({
+    username : '',
+    email : "",
+    password : '',
+    role : 'SuperAdmin'
+  })
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+const handle = (e)=>{
+  setForm((prev)=>({...prev , [e.target.name]: e.target.value}))
+}
+
+  const handleRegister = async (e) => {
     e.preventDefault();
+
+    try{
+    const Api = await API.post("/auth/register" , form )  
     setLoading(true);
     setTimeout(() => {
-      setLoading(false);
       toast.success('Account Initialized!', {
         className: darkMode ? '!bg-[#1e1b4b] !text-white !border-[#6366f1]' : '',
       });
+      navigate("/login")
     }, 2000);
+
+    }catch(err){
+      console.log(err?.response?.data?.massage || "registration failed");
+      toast.error("Access Denied!")
+      
+    }finally{
+      setLoading(false)
+    }
+    
   };
 
   return (
@@ -85,7 +107,7 @@ const RegisterPage = () => {
             <form className="grid grid-cols-2 gap-3 sm:gap-4" onSubmit={handleRegister}>
               <div className="col-span-2 flex flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Username</label>
-                <input type="text" placeholder="Username" required 
+                <input onChange={handle} name='username' type="text" placeholder="Username" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
                     darkMode ? 'bg-white/5 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500'
                   }`} />
@@ -97,7 +119,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 flex flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Gmail</label>
-                <input type="email" placeholder="Email Address" required 
+                <input type="email" onChange={handle} name='email' placeholder="Email Address" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
                     darkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'
                   }`} />
@@ -105,7 +127,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Password</label>
-                <input type="password" placeholder="Password" required 
+                <input type="password" onChange={handle} name='password' placeholder="Password" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
                     darkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'
                   }`} />
