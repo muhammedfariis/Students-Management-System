@@ -32,9 +32,11 @@ const LoginPage = () => {
       toast.success('Welcome Back!', {
         className: darkMode ? '!bg-[#1e1b4b] !text-white !border-[#6366f1]' : '',
       });
-
+     
     }, 2000);
+
       navigate("/admin")
+
     setForm({email : '' , password : ""})
     }catch(err) {
       console.log(err?.response?.data?.message || "login failed");

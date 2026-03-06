@@ -69,7 +69,7 @@ const AddUserPage = () => {
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE: THE ORIGINAL 3D FORM (FIXED) */}
+        {/* RIGHT SIDE: THE ORIGINAL 3D FORM */}
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={() => { x.set(0); y.set(0); }}
@@ -87,7 +87,7 @@ const AddUserPage = () => {
 
           <form className="space-y-5" style={{ transform: "translateZ(30px)" }}>
             
-            {/* ALIGNED INPUTS WITH IDENTICAL LABEL/PLACEHOLDER */}
+            {/* ALIGNED INPUTS */}
             {['Username', 'Email', 'Password'].map((label) => (
               <div key={label} className="flex flex-col gap-2">
                 <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">{label}</label>
@@ -98,13 +98,13 @@ const AddUserPage = () => {
                   value={formData[label]}
                   onChange={(e) => setFormData({...formData, [e.target.name]: e.target.value})}
                   className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
-                    darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-transparent focus:bg-white focus:border-indigo-500 shadow-inner'
+                    darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500 text-white' : 'bg-slate-100 border-transparent focus:bg-white focus:border-indigo-500 shadow-inner'
                   }`}
                 />
               </div>
             ))}
 
-            {/* THE DATALIST (FIXED TO STAY INSIDE PAGE) */}
+            {/* THE DATALIST */}
             <div className="flex flex-col gap-2 relative">
               <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">Role</label>
               <div 
@@ -121,7 +121,7 @@ const AddUserPage = () => {
                 {isDropdownOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: -5 }} // Opens SLIGHTLY UPWARDS to save space
+                    animate={{ opacity: 1, y: -5 }} 
                     exit={{ opacity: 0, y: 10 }}
                     className={`absolute bottom-[110%] left-0 right-0 z-[100] p-2 rounded-2xl border backdrop-blur-2xl shadow-2xl max-h-48 overflow-y-auto ${
                       darkMode ? 'bg-[#0f172a]/95 border-white/20' : 'bg-white/95 border-slate-200'
@@ -146,6 +146,7 @@ const AddUserPage = () => {
             </div>
 
             <motion.button
+              type="button"
               whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(79, 70, 229, 0.4)", skewX: -3 }}
               whileTap={{ scale: 0.98 }}
               className="w-full py-5 mt-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-colors"
@@ -156,8 +157,8 @@ const AddUserPage = () => {
             </motion.button>
           </form>
 
-          {/* THE ORIGINAL GLOW EFFECT */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
+          {/* FIXED GLOW EFFECT: Added pointer-events-none */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
         </motion.div>
       </div>
     </div>
