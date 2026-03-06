@@ -5,22 +5,45 @@ import toast, { Toaster } from 'react-hot-toast';
 import Switch from '../components/toggle';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import API from '../Api/auth/API';
 
 const LoginPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
   const [loading, setLoading] = useState(false);
+  const [form , setForm] = useState({
+     email : '',
+     password : ""
+  })
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handle = (e)=>{
+    setForm((prev)=>({...prev , [e.target.name] : e.target.value}))
+  }
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    // Simulating API call
+
+    try{
+      const api = await API.post("/auth/login" , form)
+      console.log("api response : " ,api);
+      
+      setLoading(true);
     setTimeout(() => {
-      setLoading(false);
       toast.success('Welcome Back!', {
         className: darkMode ? '!bg-[#1e1b4b] !text-white !border-[#6366f1]' : '',
       });
+
     }, 2000);
+      navigate("/admin")
+    setForm({email : '' , password : ""})
+    }catch(err) {
+      console.log(err?.response?.data?.message || "login failed");
+      
+    }finally{
+      setLoading(false);
+      
+    }
+   
   };
 
   return (
@@ -126,7 +149,7 @@ const LoginPage = () => {
             <form className="flex flex-col gap-4" onSubmit={handleLogin}>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Gmail</label>
-                <input type="email" placeholder="Email Address" required 
+                <input onChange={handle} name='email' type="email" placeholder="Email Address" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
                     darkMode ? 'bg-white/5 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500'
                   }`} />
@@ -134,7 +157,7 @@ const LoginPage = () => {
 
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Password</label>
-                <input type="password" placeholder="Password" required 
+                <input onChange={handle} name='password' type="password" placeholder="Password" required 
                   className={`w-full px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl outline-none border transition-all ${
                     darkMode ? 'bg-white/5 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500'
                   }`} />

@@ -35,6 +35,8 @@ const handle = (e)=>{
       });
     }, 2000);
 
+    setForm({email : "" , password : '' , username : " "})
+
     }catch(err){
       console.log(err?.response?.data?.massage || "registration failed");
       toast.error("Access Denied!")
