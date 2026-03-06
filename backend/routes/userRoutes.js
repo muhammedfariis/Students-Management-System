@@ -4,37 +4,33 @@ import auth from "../middlewares/authmiddle.js";
 import allowRoles from "../middlewares/userRoles.js";
 
 import {
-
+  getUserById,
   getUsers,
-  
+  deleteUser,
+  createUser,
+  updateUser,
 } from "../controllers/userLogics.js";
 
 const router = express.Router();
 
+router.get("/users", auth, allowRoles("Admin", "SuperAdmin"), getUsers);
 
-// Get All Users
-router.get("/users", auth, allowRoles("admin", "superadmin"), getUsers);
+router.get(
+  "/users/:id",
+  auth,
+  allowRoles("Admin", "SuperAdmin", "student" ),
+  getUserById,
+);
 
-// Get Single User
-// router.get(
-//   "/users/:id",
-//   auth,
-//   allowRoles("admin", "superadmin", "student"),
-//   getUsersById,
-// );
+router.post("/users", auth, allowRoles("Admin", "SuperAdmin"), createUser);
 
-// Create User
-// router.post("/users", auth, allowRoles("admin", "superadmin"), creatUsers);
+router.put(
+  "/users/:id",
+  auth,
+  allowRoles("Admin", "SuperAdmin", "student"),
+  updateUser,
+);
 
-// Update User
-// router.put(
-//   "/users/:id",
-//   auth,
-//   allowRoles("admin", "superadmin", "student"),
-//   updateUsers,
-// );
-
-// Delete User (Superadmin Only)
-// router.delete("/users/:id", auth, allowRoles("superadmin"), remove);
+router.delete("/users/:id", auth, allowRoles("SuperAdmin"), deleteUser);
 
 export default router;

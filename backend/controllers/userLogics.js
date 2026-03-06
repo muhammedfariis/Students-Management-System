@@ -1,6 +1,5 @@
 import Users from "../models/register.js";
 import Role from "../models/roles.js";
-
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -10,25 +9,25 @@ import bcrypt from "bcrypt";
 
 export const createUser = async (req, res) => {
   try {
-    const { email, password, firstname, lastname, roleId } = req.body;
+    const { username, email, password, roleId } = req.body;
 
-    // ================= RBAC =================
+    // RBAC CHECK
 
-    if (req.user.role !== "Admin" && req.user.role !== "SuperAdmin") {
-      return res.status(403).json({
-        message: "Access denied",
-      });
-    }
+ if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
+  return res.status(403).json({
+    message: "Access denied",
+  });
+}
 
-    // ================= VALIDATION =================
+    // VALIDATION
 
-    if (!email || !password || !firstname || !roleId) {
+    if (!username || !email || !password || !roleId) {
       return res.status(400).json({
         message: "Required fields missing",
       });
     }
 
-    // ================= EXIST CHECK =================
+    // CHECK EXIST
 
     const exist = await Users.findOne({ email });
 
@@ -38,7 +37,7 @@ export const createUser = async (req, res) => {
       });
     }
 
-    // ================= ROLE VERIFY =================
+    // ROLE CHECK
 
     const role = await Role.findById(roleId);
 
@@ -50,58 +49,46 @@ export const createUser = async (req, res) => {
 
     // ADMIN CANNOT CREATE ADMIN
 
-    if (req.user.role === "Admin" && role.name === "Admin") {
+    if (req.user.role === "Admin" || role.name === "Admin") {
       return res.status(403).json({
         message: "Admin cannot create Admin",
       });
     }
 
-    // ================= PASSWORD HASH =================
+    // HASH PASSWORD
 
-    const hash = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
-    // ================= CREATE =================
+    // CREATE USER
 
     const user = await Users.create({
+      username,
       email,
-      password: hash,
-      firstname,
-      lastname,
+      password: hashed,
       role: role._id,
     });
 
-    // ================= TOKEN =================
+    // TOKEN
 
     const token = jwt.sign(
       {
         userId: user._id,
         role: role.name,
       },
-
       process.env.JWT_SECRET,
-
-      {
-        expiresIn: "12h",
-      },
+      { expiresIn: "12h" },
     );
 
     return res.status(201).json({
-      message: "User Created Successfully",
-
+      message: "User created successfully",
       token,
-
-      user: {
-        id: user._id,
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        role: role.name,
-      },
+      user,
     });
   } catch (err) {
+    console.error(err);
+
     return res.status(500).json({
       message: "Internal Server Error",
-
       error: err.message,
     });
   }
@@ -113,9 +100,7 @@ export const createUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await Users.find()
-
-      .populate("role", "name permissions");
+    const users = await Users.find().populate("role", "name permissions");
 
     if (!users.length) {
       return res.status(404).json({
@@ -124,8 +109,7 @@ export const getUsers = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Users fetched",
-
+      message: "Users fetched successfully",
       users,
     });
   } catch (err) {
@@ -141,9 +125,10 @@ export const getUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   try {
-    const user = await Users.findById(req.params.id)
-
-      .populate("role", "name permissions");
+    const user = await Users.findById(req.params.id).populate(
+      "role",
+      "name permissions",
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -152,8 +137,7 @@ export const getUserById = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "User found",
-
+      message: "User fetched",
       user,
     });
   } catch (err) {
@@ -171,17 +155,13 @@ export const updateUser = async (req, res) => {
   try {
     const updates = { ...req.body };
 
-    // PASSWORD OPTIONAL
+    // HASH PASSWORD IF UPDATED
 
     if (req.body.password) {
-      updates.password = await bcrypt.hash(
-        req.body.password,
-
-        10,
-      );
+      updates.password = await bcrypt.hash(req.body.password, 10);
     }
 
-    // ROLE UPDATE IF PROVIDED
+    // ROLE UPDATE
 
     if (req.body.roleId) {
       const role = await Role.findById(req.body.roleId);
@@ -193,27 +173,22 @@ export const updateUser = async (req, res) => {
       }
 
       updates.role = role._id;
+
+      delete updates.roleId;
     }
 
-    const updatedUser = await Users.findByIdAndUpdate(
-      req.params.id,
-
-      updates,
-
-      { new: true },
-    )
-
-      .populate("role", "name permissions");
+    const updatedUser = await Users.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+    }).populate("role", "name permissions");
 
     if (!updatedUser) {
       return res.status(404).json({
-        message: "User not updated",
+        message: "User not found",
       });
     }
 
     return res.status(200).json({
-      message: "User Updated",
-
+      message: "User updated",
       updatedUser,
     });
   } catch (err) {
@@ -244,8 +219,7 @@ export const deleteUser = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "User Deleted",
-
+      message: "User deleted successfully",
       deleted,
     });
   } catch (err) {
