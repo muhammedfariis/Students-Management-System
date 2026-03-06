@@ -7,10 +7,12 @@ import JWT from "jsonwebtoken";
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    console.log("working the req body");
+    
 
     // already exist ?
 
-    const exist = await Register.findOne(email);
+    const exist = await Register.findOne({email});
 
     if (exist) {
       return res
@@ -68,6 +70,8 @@ export const register = async (req, res) => {
       user: signup,
     });
   } catch (err) {
+    console.log(err);
+    
     res.status(500).json(err);
   }
 };
@@ -132,6 +136,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log(err);
+    
     res.status(500).json(err);
   }
 };
