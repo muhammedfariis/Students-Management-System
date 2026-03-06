@@ -14,7 +14,7 @@ import userRouters from "./routes/userRoutes.js"
 import database from "./config/database.js"
 const app = express()
 dotenv.config()
-const PORT = process.env.PORT
+const PORT = 8080
 // using middlewares
 app.use(cors())
 app.use(express.json())

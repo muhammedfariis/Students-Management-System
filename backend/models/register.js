@@ -26,7 +26,6 @@ const registerSchema = new mongoose.Schema(
 
       ref: "Role",
 
-      required: true,
     },
   },
   { timestamps: true },
