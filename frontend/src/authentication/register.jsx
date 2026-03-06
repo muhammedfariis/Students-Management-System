@@ -25,13 +25,14 @@ const handle = (e)=>{
     e.preventDefault();
 
     try{
-    const Api = await API.post("/auth/register" , form )  
     setLoading(true);
+    const Api = await API.post("/auth/register" , form )
+    console.log("api response : " , API);
+      
     setTimeout(() => {
       toast.success('Account Initialized!', {
         className: darkMode ? '!bg-[#1e1b4b] !text-white !border-[#6366f1]' : '',
       });
-      navigate("/login")
     }, 2000);
 
     }catch(err){

@@ -33,7 +33,7 @@ export const register = async (req, res) => {
       role = await Role.create({
         name: "SuperAdmin",
 
-        permissions: ["dashboard", "create-user", "create-role", "landing"],
+        permissions: ["/admin/dashboard"],
       });
     }
 
