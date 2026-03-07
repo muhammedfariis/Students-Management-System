@@ -8,10 +8,6 @@ import {
   Pencil, 
   Trash2, 
   Mail, 
-  Lock, 
-  Activity, 
-  AlertCircle, 
-  Skull,
   X,
   Save,
   Fingerprint,
@@ -174,7 +170,7 @@ const UserManagementList = () => {
         >
           <div className="overflow-x-auto">
             <table className="w-full text-center border-collapse">
-              <thead>
+              <thead >
                 <tr className={`${darkMode ? 'bg-white/5' : 'bg-slate-50'}`}>
                   <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest opacity-40">Serial ID</th>
                   <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest opacity-40">User Credentials</th>
@@ -194,6 +190,7 @@ const UserManagementList = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     className={`group transition-all ${darkMode ? 'hover:bg-white/[0.03]' : 'hover:bg-indigo-50/50'}`}
                   >
+      
                     <td className="px-6 py-4 font-mono text-xs font-bold text-indigo-500">#{user._id.slice(-6)}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3 justify-center">
@@ -258,12 +255,20 @@ const UserManagementList = () => {
             <motion.div 
               initial={{ x: 600, opacity: 0, scale: 0.5 }}
               animate={{ x: 0, opacity: 1, scale: 1 }}
-              exit={{ x: -600, opacity: 0, scale: 0.5 }} // Slides to center then left on exit
+              exit={{ x: -600, opacity: 0, scale: 0.5 }}
               transition={{ type: "spring", damping: 25, stiffness: 180 }}
               className={`relative w-full max-w-md p-10 rounded-[3rem] border shadow-2xl ${
-                darkMode ? 'bg-[#0f172a] border-white/10' : 'bg-white border-slate-200'
+                darkMode ? 'bg-[#0f172a] border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'
               }`}
             >
+              {/* CLOSE BUTTON */}
+              <button 
+                onClick={() => setEditingUser(null)}
+                className={`absolute top-6 right-6 p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
+              >
+                <X size={20} className={darkMode ? 'text-white/40' : 'text-slate-400'} />
+              </button>
+
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Fingerprint className="text-indigo-500" size={32} />
@@ -277,7 +282,8 @@ const UserManagementList = () => {
                     <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-2">Username</label>
                     <input 
                         type="text" 
-                        className={`w-full px-6 py-4 rounded-2xl outline-none font-bold text-sm transition-all ${darkMode ? 'bg-black/40 border border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-transparent focus:border-indigo-500'}`} 
+                        required
+                        className={`w-full px-6 py-4 rounded-2xl outline-none font-bold text-sm transition-all ${darkMode ? 'bg-black/40 border border-white/10 focus:border-indigo-500 text-white' : 'bg-slate-100 border-transparent focus:bg-white focus:border-indigo-500 text-slate-900'}`} 
                         value={editFormData.username} 
                         onChange={e => setEditFormData({...editFormData, username: e.target.value})} 
                     />
@@ -287,7 +293,8 @@ const UserManagementList = () => {
                     <label className="text-[10px] font-black uppercase tracking-widest opacity-40 ml-2">Email Address</label>
                     <input 
                         type="email" 
-                        className={`w-full px-6 py-4 rounded-2xl outline-none font-bold text-sm transition-all ${darkMode ? 'bg-black/40 border border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-transparent focus:border-indigo-500'}`} 
+                        required
+                        className={`w-full px-6 py-4 rounded-2xl outline-none font-bold text-sm transition-all ${darkMode ? 'bg-black/40 border border-white/10 focus:border-indigo-500 text-white' : 'bg-slate-100 border-transparent focus:bg-white focus:border-indigo-500 text-slate-900'}`} 
                         value={editFormData.email} 
                         onChange={e => setEditFormData({...editFormData, email: e.target.value})} 
                     />
@@ -297,7 +304,7 @@ const UserManagementList = () => {
                   <button 
                     type="submit" 
                     disabled={isUpdating}
-                    className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/20"
+                    className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/20 disabled:opacity-50"
                   >
                     {isUpdating ? <Loader2 className="animate-spin" size={16} /> : <><Save size={16} /> Commit Change</>}
                   </button>
