@@ -6,7 +6,7 @@ import API from '../../Api/auth/API'; // Ensure path is correct
 
 const AddUserPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
-  const [formData, setFormData] = useState({ username: '', email: '', password: ''});
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' , role : ""});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,52 +25,23 @@ const AddUserPage = () => {
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
+   
 
-  // --- INTEGRATION LOGIC ---
-  const handleInitializeUser = async () => {
-    if (!formData.Username || !formData.Email || !formData.Password) {
-      alert("Please fill all fields");
-      return;
-    }
+  
 
+  const handleInitializeUser = async (e) => {
+     
+        e.preventDefault()
     setLoading(true);
     try {
-      // 1. Fetch all roles from /api/roles
-      // Note: Your interceptor baseURL is http://localhost:8080/api, so we just use "/roles"
-      const { data: existingRoles } = await API.get('/roles');
+     
+      const api = await API.post('/officials/users',formData);
+      console.log("api response add user : " , api);
       
-      let targetRole;
-
-      // 2. Check if the selected role exists in the DB
-      const foundRole = existingRoles.find(
-        (r) => r.name.toLowerCase() === formData.Role.toLowerCase()
-      );
-
-      if (!foundRole) {
-        // Create the role if it doesn't exist
-        const { data: newRole } = await API.post('/roles', {
-          name: formData.Role,
-          permissions: ["dashboard", "landing"]
-        });
-        targetRole = newRole;
-      } else {
-        targetRole = foundRole;
-      }
-
-      // 3. Create the User using the Role's ObjectId (_id)
-      // Your model requires 'role' to be an ObjectId ref
-      const userPayload = {
-        username: formData.Username,
-        email: formData.Email,
-        password: formData.Password,
-        role: targetRole._id // Sending the Hex ID, not the string name
-      };
-
-      await API.post('/officials/users', userPayload);
       
       alert("User initialized successfully!");
-      setFormData({ Username: '', Email: '', Password: '', Role: 'Student' });
-
+      setFormData({username : "" , email : '' , password : '' , role : '' });
+      
     } catch (error) {
       console.error("Initialization Failed:", error);
       const errorMsg = error.response?.data?.message || "Check console for details";
