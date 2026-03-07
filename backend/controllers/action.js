@@ -12,19 +12,19 @@ export const createAction = async (req, res) => {
     const {
       actionType,
       targetCategory,
-      idNumber,
+       username,
       duration,
       reason,
       effectiveDate,
     } = req.body;
 
-    if (!actionType || !targetCategory || !idNumber || !reason || !effectiveDate) {
+    if (!actionType || !targetCategory || !username || !reason || !effectiveDate) {
       return res.status(400).json({
         message: "Required fields missing",
       });
     }
 
-    const user = await Users.findOne({ idNumber });
+    const user = await Users.findOne({username});
 
     if (!user) {
       return res.status(404).json({
@@ -41,12 +41,13 @@ export const createAction = async (req, res) => {
     const action = await Action.create({
       actionType,
       targetCategory,
-      idNumber,
+      username,
       user: user._id,
       duration: actionType === "Dismissal" ? null : duration,
       reason,
       effectiveDate,
       issuedBy: req.user.userId,
+
     });
 
     res.status(201).json({

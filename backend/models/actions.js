@@ -10,19 +10,17 @@ const actionSchema = new mongoose.Schema(
 
     targetCategory: {
       type: String,
-      enum: ["Student", "Staff", "Faculty", "Contractor"],
       required: true,
     },
 
-    idNumber: {
-      type : mongoose.Schema.Types.ObjectId,
-      ref : "authentications",
+    username: {
+      type : String,
       required: true,
     },
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "authentications",
       required: true,
     },
 
@@ -43,7 +41,7 @@ const actionSchema = new mongoose.Schema(
 
     issuedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "authentications",
     },
 
     status: {
