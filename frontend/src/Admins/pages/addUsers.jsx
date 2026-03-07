@@ -2,13 +2,21 @@ import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
-import API from '../../Api/auth/API'; // Ensure path is correct
+import toast, { Toaster } from 'react-hot-toast';
+import API from '../../Api/auth/API'; // Path based on your structure
 
 const AddUserPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' , role : ""});
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  // Single form state object
+  const [form, setForm] = useState({
+    username: '',
+    email: '',
+    password: '',
+    role: 'Staff' // Default value
+  });
 
   const rolesList = ["Staff", "Admin", "Cashier"];
 
@@ -25,27 +33,33 @@ const AddUserPage = () => {
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
-   
 
-  
+  // --- SIMPLE HANDLER (Same as your LoginPage) ---
+  const handle = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleInitializeUser = async (e) => {
-     
-        e.preventDefault()
+    e.preventDefault();
     setLoading(true);
+
     try {
-     
-      const api = await API.post('/officials/users',formData);
-      console.log("api response add user : " , api);
-      
-      
-      alert("User initialized successfully!");
-      setFormData({username : "" , email : '' , password : '' , role : '' });
-      
+      // Direct post to your user creation API
+      const response = await API.post('/officials/users', form);
+      console.log("api response add user:", response);
+
+      toast.success('User Initialized Successfully!', {
+        className: darkMode ? '!bg-[#1e1b4b] !text-white !border-[#6366f1]' : '',
+      });
+
+      // Reset form
+      setForm({ username: '', email: '', password: '', role: 'Staff' });
     } catch (error) {
       console.error("Initialization Failed:", error);
-      const errorMsg = error.response?.data?.message || "Check console for details";
-      alert(`Error: ${errorMsg}`);
+      const errorMsg = error.response?.data?.message || "Failed to create user";
+      toast.error(errorMsg, {
+        className: darkMode ? '!bg-red-900 !text-white' : '',
+      });
     } finally {
       setLoading(false);
     }
@@ -55,7 +69,9 @@ const AddUserPage = () => {
     <div className={`h-full w-full flex items-center justify-center p-6 transition-colors duration-500 overflow-hidden relative font-sans ${
       darkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'
     }`}>
+      <Toaster position="top-right" />
       
+      {/* Background Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[120px] opacity-30 animate-pulse ${darkMode ? 'bg-indigo-600' : 'bg-indigo-300'}`} />
         <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-20 ${darkMode ? 'bg-purple-600' : 'bg-purple-300'}`} />
@@ -63,11 +79,8 @@ const AddUserPage = () => {
 
       <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
         
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="space-y-6"
-        >
+        {/* Left Info Side */}
+        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 text-xs font-bold tracking-widest uppercase">
             User Management
           </div>
@@ -80,27 +93,15 @@ const AddUserPage = () => {
           <p className={`text-lg max-w-md ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
             Seamlessly onboard new operatives into the <strong>Attendenx</strong> ecosystem.
           </p>
-          
-          <div className="flex gap-4 pt-4">
-            <div className={`p-4 rounded-2xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'}`}>
-              <Icon icon="solar:shield-check-bold-duotone" width="32" className="text-indigo-500 mb-2" />
-              <h4 className="font-bold text-sm">Secure Entry</h4>
-            </div>
-            <div className={`p-4 rounded-2xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'}`}>
-              <Icon icon="solar:bolt-circle-bold-duotone" width="32" className="text-purple-500 mb-2" />
-              <h4 className="font-bold text-sm">Instant Sync</h4>
-            </div>
-          </div>
         </motion.div>
 
+        {/* Right Form Side */}
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={() => { x.set(0); y.set(0); }}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
           className={`relative group p-8 rounded-[2.5rem] border transition-all duration-500 ${
-            darkMode 
-              ? 'bg-white/[0.03] border-white/10 backdrop-blur-xl shadow-2xl' 
-              : 'bg-white border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)]'
+            darkMode ? 'bg-white/[0.03] border-white/10 backdrop-blur-xl shadow-2xl' : 'bg-white border-slate-200 shadow-xl'
           }`}
         >
           <div className="mb-8" style={{ transform: "translateZ(50px)" }}>
@@ -108,33 +109,63 @@ const AddUserPage = () => {
             <p className="text-sm opacity-50">Enter credentials for the new operative.</p>
           </div>
 
-          <form className="space-y-5" style={{ transform: "translateZ(30px)" }}>
+          <form className="space-y-5" style={{ transform: "translateZ(30px)" }} onSubmit={handleInitializeUser}>
             
-            {['Username', 'Email', 'Password'].map((label) => (
-              <div key={label} className="flex flex-col gap-2">
-                <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">{label}</label>
-                <input 
-                  type={label === 'Password' ? 'password' : 'text'}
-                  name={label}
-                  placeholder={label === 'Email' ? 'example@gmail.com' : label}
-                  value={formData[label]}
-                  onChange={(e) => setFormData({...formData, [e.target.name]: e.target.value})}
-                  className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
-                    darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500 text-white' : 'bg-slate-100 border-transparent focus:bg-white focus:border-indigo-500 shadow-inner'
-                  }`}
-                />
-              </div>
-            ))}
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500 ml-1">Username</label>
+              <input 
+                name="username" 
+                value={form.username} 
+                onChange={handle} 
+                type="text" 
+                placeholder="Username" 
+                required 
+                className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
+                  darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500 shadow-inner'
+                }`} 
+              />
+            </div>
 
-            <div className="flex flex-col gap-2 relative">
-              <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">Role</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500 ml-1">Email</label>
+              <input 
+                name="email" 
+                value={form.email} 
+                onChange={handle} 
+                type="email" 
+                placeholder="operative@gmail.com" 
+                required 
+                className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
+                  darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500 shadow-inner'
+                }`} 
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500 ml-1">Password</label>
+              <input 
+                name="password" 
+                value={form.password} 
+                onChange={handle} 
+                type="password" 
+                placeholder="••••••••" 
+                required 
+                className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
+                  darkMode ? 'bg-black/20 border-white/10 focus:border-indigo-500' : 'bg-slate-100 border-slate-200 focus:border-indigo-500 shadow-inner'
+                }`} 
+              />
+            </div>
+
+            {/* Role Selection */}
+            <div className="flex flex-col gap-1 relative">
+              <label className="text-[10px] font-black uppercase tracking-widest text-indigo-500 ml-1">Role</label>
               <div 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className={`w-full px-5 py-4 rounded-2xl border cursor-pointer flex justify-between items-center transition-all ${
-                  darkMode ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-transparent'
+                  darkMode ? 'bg-black/20 border-white/10' : 'bg-slate-100 border-slate-200'
                 }`}
               >
-                <span className="text-sm font-bold">{formData.Role}</span>
+                <span className="text-sm font-bold">{form.role}</span>
                 <Icon icon="solar:alt-arrow-down-bold" className={`text-indigo-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </div>
 
@@ -151,9 +182,9 @@ const AddUserPage = () => {
                     {rolesList.map((r) => (
                       <div
                         key={r}
-                        onClick={() => { setFormData({...formData, Role: r}); setIsDropdownOpen(false); }}
+                        onClick={() => { setForm({...form, role: r}); setIsDropdownOpen(false); }}
                         className={`px-4 py-3 rounded-xl text-xs font-black uppercase cursor-pointer transition-all ${
-                          formData.Role === r 
+                          form.role === r 
                             ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30' 
                             : darkMode ? 'hover:bg-white/10' : 'hover:bg-indigo-50'
                         }`}
@@ -167,9 +198,8 @@ const AddUserPage = () => {
             </div>
 
             <motion.button
-              type="button"
+              type="submit"
               disabled={loading}
-              onClick={handleInitializeUser}
               whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(79, 70, 229, 0.4)", skewX: -3 }}
               whileTap={{ scale: 0.98 }}
               className={`w-full py-5 mt-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
