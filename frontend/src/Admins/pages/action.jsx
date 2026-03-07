@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
+import toast from 'react-hot-toast';
+import API from '../../Api/auth/API';
 
 const ActionPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
+  const [loading , setLoading] = useState(false)
   
-  // State for disciplinary details
   const [formData, setFormData] = useState({
-    actionType: 'Suspension', // Suspension or Dismissal
-    targetCategory: 'Student', // Student or Staff
+    actionType: 'Suspension', 
+    targetCategory: 'Select', 
     idNumber: '',
     duration: '',
     reason: '',
@@ -17,14 +19,33 @@ const ActionPage = () => {
   });
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const categories = ["Student", "Staff", "Faculty", "Contractor"];
+  const categories = ["Student", "Staff", "Admin", "Cashier"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // --- 3D PARALLAX EFFECT ---
+  const handleAction = async (e)=>{
+    e.preventDefault()
+    setLoading(true)
+    try{
+      const api = await API.post("/actions/create" , formData)
+      console.log("action data : " , api);
+
+      setTimeout(() => {
+        toast.success("action submitted")
+      }, 2000);
+      
+      setFormData({actionType : '' , targetCategory : '' , idNumber : '' , effectiveDate : '' , duration : '' , reason : ""})
+    }catch(err){
+      console.log(err?.response?.data?.message || "form not submited");
+      toast.error("form submition has some issue please check console")
+    }finally{
+      setLoading(false)
+    }
+  }
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x);

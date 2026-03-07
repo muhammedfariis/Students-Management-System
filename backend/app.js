@@ -5,6 +5,7 @@ import spinner from "./design/ora.js"
 import authRouters from "./routes/authroutes.js"
 import userRouters from "./routes/userRoutes.js"
 import routerRole from "./routes/roles.js"
+import actionRouter from "./routes/action.js"
 // import batchRouters from "./batch-management-3/routers/batchroute.js"
 // import studentRouters from "./students-management-4/routers/studentRoutes.js"
 // import stdinbatch from "./students-in-batches-5/routers/batchRoute.js"
@@ -22,6 +23,7 @@ app.use(express.json())
 app.use("/api/auth" , authRouters)
 app.use("/api/officials" , userRouters)
 app.use("/api/roles" , routerRole)
+app.use("/api/actions" , actionRouter)
 // app.use("/api/batchdetails" , batchRouters )
 // app.use("/api/studentdetails" , studentRouters)
 // app.use("/api/batchassume" , stdinbatch)
