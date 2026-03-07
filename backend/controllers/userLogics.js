@@ -3,31 +3,27 @@ import Role from "../models/roles.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-// ========================================
-// CREATE USER (ADMIN + SUPERADMIN)
-// ========================================
 
 export const createUser = async (req, res) => {
   try {
-    const { username, email, password, roleId } = req.body;
+    const { username, email, password, role } = req.body;
 
-    // RBAC CHECK
+    console.log("Role:", req.user.role);
 
- if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
-  return res.status(403).json({
-    message: "Access denied",
-  });
-}
 
-    // VALIDATION
+    if (!["Admin", "SuperAdmin"].includes(req.user.role)) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
 
-    if (!username || !email || !password || !roleId) {
+
+    if (!username || !email || !password || !role) {
       return res.status(400).json({
         message: "Required fields missing",
       });
     }
 
-    // CHECK EXIST
 
     const exist = await Users.findOne({ email });
 
@@ -37,66 +33,58 @@ export const createUser = async (req, res) => {
       });
     }
 
-    // ROLE CHECK
 
-    const role = await Role.findById(roleId);
 
-    if (!role) {
+    const roleData = await Role.findOne({ name: role });
+
+    if (!roleData) {
       return res.status(404).json({
         message: "Role not found",
       });
     }
 
-    // ADMIN CANNOT CREATE ADMIN
 
-    if (req.user.role === "Admin" || role.name === "Admin") {
+    if (req.user.role === "Admin" && roleData.name === "Admin") {
       return res.status(403).json({
-        message: "Admin cannot create Admin",
+        message: "Admin cannot create another Admin",
       });
     }
 
-    // HASH PASSWORD
 
     const hashed = await bcrypt.hash(password, 10);
 
-    // CREATE USER
 
     const user = await Users.create({
       username,
       email,
       password: hashed,
-      role: role._id,
+      role: roleData._id,
     });
 
-    // TOKEN
 
     const token = jwt.sign(
       {
         userId: user._id,
-        role: role.name,
+        role: roleData.name,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "12h" },
+      { expiresIn: "12h" }
     );
 
-    return res.status(201).json({
+    res.status(201).json({
       message: "User created successfully",
-      token,
       user,
+      token,
     });
   } catch (err) {
     console.error(err);
 
-    return res.status(500).json({
+    res.status(500).json({
       message: "Internal Server Error",
-      error: err.message,
     });
   }
 };
 
-// ========================================
-// GET ALL USERS
-// ========================================
 
 export const getUsers = async (req, res) => {
   try {
@@ -119,9 +107,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// ========================================
-// GET USER BY ID
-// ========================================
+
 
 export const getUserById = async (req, res) => {
   try {
@@ -147,21 +133,17 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// ========================================
-// UPDATE USER
-// ========================================
+
 
 export const updateUser = async (req, res) => {
   try {
     const updates = { ...req.body };
 
-    // HASH PASSWORD IF UPDATED
 
     if (req.body.password) {
       updates.password = await bcrypt.hash(req.body.password, 10);
     }
 
-    // ROLE UPDATE
 
     if (req.body.roleId) {
       const role = await Role.findById(req.body.roleId);
@@ -198,9 +180,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// ========================================
-// DELETE USER (SUPERADMIN ONLY)
-// ========================================
+
 
 export const deleteUser = async (req, res) => {
   try {

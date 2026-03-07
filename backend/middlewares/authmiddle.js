@@ -1,34 +1,32 @@
 import jwt from "jsonwebtoken";
 
 const auth = (req, res, next) => {
+  const headers = req.headers.authorization;
+
+  if (!headers) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = headers.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Token missing" });
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        message: "Unauthorized - Token Missing",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // ADD THIS - log decoded to see exact payload shape
+    console.log("Decoded token payload:", decoded);
+
     req.user = {
-      id: decoded.userId,
+       id: decoded.userId ?? decoded.user,
       role: decoded.role,
     };
 
-    console.log("✅ User ID:", req.user.id);
-    console.log("✅ Role:", req.user.role);
-
     next();
-  } catch (error) {
-    console.error("JWT Error:", error.message);
-
-    return res.status(401).json({
-      message: "Invalid or Expired Token",
-    });
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 

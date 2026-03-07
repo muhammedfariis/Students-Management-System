@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Icon } from '@iconify/react';
+import API from '../../Api/auth/API'; // Ensure path is correct
 
 const AddUserPage = () => {
   const darkMode = useSelector((state) => state.theme.mode === "dark");
-  const [formData, setFormData] = useState({ Username: '', Email: '', Password: '', Role: 'Student' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: ''});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const roles = ["Student", "Instructor", "Administrator", "Developer"];
+  const rolesList = ["Staff", "Admin", "Cashier"];
 
   // --- 3D PARALLAX LOGIC ---
   const x = useMotionValue(0);
@@ -24,12 +26,65 @@ const AddUserPage = () => {
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
+  // --- INTEGRATION LOGIC ---
+  const handleInitializeUser = async () => {
+    if (!formData.Username || !formData.Email || !formData.Password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // 1. Fetch all roles from /api/roles
+      // Note: Your interceptor baseURL is http://localhost:8080/api, so we just use "/roles"
+      const { data: existingRoles } = await API.get('/roles');
+      
+      let targetRole;
+
+      // 2. Check if the selected role exists in the DB
+      const foundRole = existingRoles.find(
+        (r) => r.name.toLowerCase() === formData.Role.toLowerCase()
+      );
+
+      if (!foundRole) {
+        // Create the role if it doesn't exist
+        const { data: newRole } = await API.post('/roles', {
+          name: formData.Role,
+          permissions: ["dashboard", "landing"]
+        });
+        targetRole = newRole;
+      } else {
+        targetRole = foundRole;
+      }
+
+      // 3. Create the User using the Role's ObjectId (_id)
+      // Your model requires 'role' to be an ObjectId ref
+      const userPayload = {
+        username: formData.Username,
+        email: formData.Email,
+        password: formData.Password,
+        role: targetRole._id // Sending the Hex ID, not the string name
+      };
+
+      await API.post('/officials/users', userPayload);
+      
+      alert("User initialized successfully!");
+      setFormData({ Username: '', Email: '', Password: '', Role: 'Student' });
+
+    } catch (error) {
+      console.error("Initialization Failed:", error);
+      const errorMsg = error.response?.data?.message || "Check console for details";
+      alert(`Error: ${errorMsg}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={`h-full w-full flex items-center justify-center p-6 transition-colors duration-500 overflow-hidden relative font-sans ${
       darkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'
     }`}>
       
-      {/* ORIGINAL DYNAMIC BACKGROUND ORBS */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[120px] opacity-30 animate-pulse ${darkMode ? 'bg-indigo-600' : 'bg-indigo-300'}`} />
         <div className={`absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-20 ${darkMode ? 'bg-purple-600' : 'bg-purple-300'}`} />
@@ -37,7 +92,6 @@ const AddUserPage = () => {
 
       <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
         
-        {/* LEFT SIDE: THE ORIGINAL HEAVY TEXT UI */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -53,10 +107,9 @@ const AddUserPage = () => {
             </span>
           </h1>
           <p className={`text-lg max-w-md ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-            Seamlessly onboard new operatives into the <strong>Attendenx</strong> ecosystem with high-level encryption.
+            Seamlessly onboard new operatives into the <strong>Attendenx</strong> ecosystem.
           </p>
           
-          {/* THE ORIGINAL ICON BLOCKS */}
           <div className="flex gap-4 pt-4">
             <div className={`p-4 rounded-2xl border ${darkMode ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'}`}>
               <Icon icon="solar:shield-check-bold-duotone" width="32" className="text-indigo-500 mb-2" />
@@ -69,7 +122,6 @@ const AddUserPage = () => {
           </div>
         </motion.div>
 
-        {/* RIGHT SIDE: THE ORIGINAL 3D FORM */}
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={() => { x.set(0); y.set(0); }}
@@ -87,14 +139,13 @@ const AddUserPage = () => {
 
           <form className="space-y-5" style={{ transform: "translateZ(30px)" }}>
             
-            {/* ALIGNED INPUTS */}
             {['Username', 'Email', 'Password'].map((label) => (
               <div key={label} className="flex flex-col gap-2">
                 <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">{label}</label>
                 <input 
                   type={label === 'Password' ? 'password' : 'text'}
                   name={label}
-                  placeholder={label}
+                  placeholder={label === 'Email' ? 'example@gmail.com' : label}
                   value={formData[label]}
                   onChange={(e) => setFormData({...formData, [e.target.name]: e.target.value})}
                   className={`w-full px-5 py-4 rounded-2xl outline-none border transition-all font-bold text-sm ${
@@ -104,7 +155,6 @@ const AddUserPage = () => {
               </div>
             ))}
 
-            {/* THE DATALIST */}
             <div className="flex flex-col gap-2 relative">
               <label className="text-xs font-black uppercase tracking-widest opacity-60 ml-1">Role</label>
               <div 
@@ -127,7 +177,7 @@ const AddUserPage = () => {
                       darkMode ? 'bg-[#0f172a]/95 border-white/20' : 'bg-white/95 border-slate-200'
                     }`}
                   >
-                    {roles.map((r) => (
+                    {rolesList.map((r) => (
                       <div
                         key={r}
                         onClick={() => { setFormData({...formData, Role: r}); setIsDropdownOpen(false); }}
@@ -147,17 +197,18 @@ const AddUserPage = () => {
 
             <motion.button
               type="button"
+              disabled={loading}
+              onClick={handleInitializeUser}
               whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(79, 70, 229, 0.4)", skewX: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-5 mt-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-colors"
+              className={`w-full py-5 mt-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 transition-colors ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
               style={{ transform: "translateZ(60px)" }}
             >
-              <Icon icon="solar:user-plus-bold" width="20" />
-              Initialize User
+              <Icon icon={loading ? "line-md:loading-twotone-loop" : "solar:user-plus-bold"} width="20" />
+              {loading ? "Initializing..." : "Initialize User"}
             </motion.button>
           </form>
 
-          {/* FIXED GLOW EFFECT: Added pointer-events-none */}
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
         </motion.div>
       </div>

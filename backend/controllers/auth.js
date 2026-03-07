@@ -53,7 +53,7 @@ export const register = async (req, res) => {
 
     const token = JWT.sign(
       {
-        user: signup._id,
+        userId: signup._id,
 
         role: role.name,
       },
@@ -110,7 +110,7 @@ export const login = async (req, res) => {
 
     const token = JWT.sign(
       {
-        user: user._id,
+        userId: user._id,
 
         role: user.role.name,
       },
