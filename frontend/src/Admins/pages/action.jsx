@@ -13,7 +13,7 @@ const ActionPage = () => {
   const [formData, setFormData] = useState({
     actionType: 'Suspension', 
     targetCategory: 'Select', 
-    idNumber: '',
+    username: '',
     duration: '',
     reason: '',
     effectiveDate: ''
@@ -21,14 +21,14 @@ const ActionPage = () => {
 
   // Reset ID validation if category or ID changes
   const [isValidating, setIsValidating] = useState(false);
-  const [userExists, setUserExists] = useState(null); // null, true, or false
+  const [userExists, setUserExists] = useState(null); 
 
   const categories = ["Student", "Staff", "Admin", "Cashier"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (name === 'idNumber' || name === 'targetCategory') {
+    if (name === 'username' || name === 'targetCategory') {
       setUserExists(null); // Reset validation status when input changes
     }
   };
@@ -63,8 +63,8 @@ const ActionPage = () => {
       setFormData({
         actionType: 'Suspension', 
         targetCategory: 'Select', 
-        idNumber: '',
-        duration: '',
+        username: '',
+        duration:  null,
         reason: '',
         effectiveDate: ''
       });
@@ -124,7 +124,7 @@ const ActionPage = () => {
             </span>
           </h1>
           <p className={`text-lg max-w-md ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-            Process disciplinary measures. Please verify the <strong>ID Number</strong> carefully before confirmation.
+            Process disciplinary measures. Please verify the <strong>UserName</strong> carefully before confirmation.
           </p>
         </motion.div>
 
@@ -189,10 +189,10 @@ const ActionPage = () => {
 
               {/* ID NUMBER WITH STATUS ICON */}
               <div className="flex flex-col gap-1 relative">
-                <label className="text-[10px] font-black uppercase tracking-widest text-red-500 ml-1">ID Number</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-red-500 ml-1">User</label>
                 <div className="relative">
                   <input 
-                    type="text" name="idNumber" placeholder="e.g. STU-9920" required
+                    type="text" name="username" placeholder="username" required
                     value={formData.idNumber} onChange={handleChange}
                     className={`w-full px-5 py-3 rounded-2xl outline-none border transition-all font-bold text-sm ${
                       userExists === false ? 'border-red-500 bg-red-500/5' : 
