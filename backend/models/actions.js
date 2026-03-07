@@ -15,7 +15,8 @@ const actionSchema = new mongoose.Schema(
     },
 
     idNumber: {
-      type: String,
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "authentications",
       required: true,
     },
 
